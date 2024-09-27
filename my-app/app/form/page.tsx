@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from "react";
+import {useForm} from "react-hook-form";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {
@@ -13,34 +13,14 @@ import {
 import {Button} from "@/components/ui/button";
 
 export default function FormCart() {
-  const [formData, setFormData] = useState({
-    brand: "",
-    model: "",
-    year: "",
-    vin: "",
-    color: "",
-    mileage: "",
-    fuelType: "",
-    transmission: "",
-    doors: "",
-    driveType: "",
-    bodyStyle: "",
-    horsepower: "",
-    torque: "",
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    setFormData((prev) => ({...prev, [name]: value}));
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({...prev, [name]: value}));
-  };
+  const {register, handleSubmit} = useForm();
 
   return (
     <div className="flex flex-col justify-center items-center bg-gradient-to-t from-slate-50 to-white my-20 p-10">
-      <form className="max-w-md mx-auto my-20 space-y-8">
+      <form
+        onSubmit={handleSubmit((data) => console.log(data))}
+        className="max-w-md mx-auto my-20 space-y-8"
+      >
         <div className="space-y-10">
           <div className="text-center">
             <h1 className="text-2xl font-bold">Add New Car</h1>
@@ -53,11 +33,9 @@ export default function FormCart() {
               <Input
                 type="text"
                 id="brand"
-                name="brand"
                 placeholder="Ex. Toyota"
-                value={formData.brand}
-                onChange={handleInputChange}
-                required
+                {...register("brand")}
+                // required
               />
             </div>
 
@@ -66,11 +44,9 @@ export default function FormCart() {
               <Input
                 type="text"
                 id="model"
-                name="model"
                 placeholder="Ex. Corolla"
-                value={formData.model}
-                onChange={handleInputChange}
-                required
+                {...register("model")}
+                // required
               />
             </div>
 
@@ -79,11 +55,9 @@ export default function FormCart() {
               <Input
                 type="number"
                 id="year"
-                name="year"
                 placeholder="Ex. 2020"
-                value={formData.year}
-                onChange={handleInputChange}
-                required
+                {...register("year")}
+                // required
               />
             </div>
 
@@ -92,11 +66,9 @@ export default function FormCart() {
               <Input
                 type="text"
                 id="vin"
-                name="vin"
                 placeholder="Enter VIN"
-                value={formData.vin}
-                onChange={handleInputChange}
-                required
+                {...register("vin")}
+                // required
               />
             </div>
 
@@ -106,11 +78,9 @@ export default function FormCart() {
                 <Input
                   type="text"
                   id="color"
-                  name="color"
                   placeholder="Ex. Red"
-                  value={formData.color}
-                  onChange={handleInputChange}
-                  required
+                  {...register("color")}
+                  // required
                 />
               </div>
               <div className="space-y-2">
@@ -118,11 +88,9 @@ export default function FormCart() {
                 <Input
                   type="number"
                   id="mileage"
-                  name="mileage"
                   placeholder="Ex. 50000"
-                  value={formData.mileage}
-                  onChange={handleInputChange}
-                  required
+                  {...register("mileage")}
+                  // required
                 />
               </div>
             </div>
@@ -138,40 +106,32 @@ export default function FormCart() {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="fuelType">Fuel Type</Label>
-              <Select
-                name="fuelType"
-                onValueChange={(value) => handleSelectChange("fuelType", value)}
+              <select
+                id="fuelType"
+                {...register("fuelType")}
+                className="w-full p-2 border rounded bg-transparent"
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose fuel type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="electric">Electric</SelectItem>
-                  <SelectItem value="diesel">Diesel</SelectItem>
-                  <SelectItem value="gas">Gas</SelectItem>
-                  <SelectItem value="gasoline">Gasoline</SelectItem>
-                  <SelectItem value="hybrid">Hybrid</SelectItem>
-                </SelectContent>
-              </Select>
+                <option value="">Choose fuel type</option>
+                <option value="electric">Electric</option>
+                <option value="diesel">Diesel</option>
+                <option value="gas">Gas</option>
+                <option value="gasoline">Gasoline</option>
+                <option value="hybrid">Hybrid</option>
+              </select>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="transmission">Transmission</Label>
-              <Select
-                name="transmission"
-                onValueChange={(value) =>
-                  handleSelectChange("transmission", value)
-                }
+              <select
+                id="transmission"
+                {...register("transmission")}
+                className="w-full p-2 border rounded bg-transparent"
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose transmission type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="automatic">Automatic</SelectItem>
-                  <SelectItem value="manual">Manual</SelectItem>
-                  <SelectItem value="cvt">CVT</SelectItem>
-                </SelectContent>
-              </Select>
+                <option value="">Choose transmission type</option>
+                <option value="automatic">Automatic</option>
+                <option value="manual">Manual</option>
+                <option value="cvt">CVT</option>
+              </select>
             </div>
 
             <div className="space-y-2">
@@ -179,52 +139,40 @@ export default function FormCart() {
               <Input
                 type="number"
                 id="doors"
-                name="doors"
                 placeholder="Ex. 2, 4"
-                value={formData.doors}
-                onChange={handleInputChange}
-                required
+                {...register("doors")}
+                // required
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="driveType">Drive Type</Label>
-              <Select
-                name="driveType"
-                onValueChange={(value) =>
-                  handleSelectChange("driveType", value)
-                }
+              <select
+                id="driveType"
+                {...register("driveType")}
+                className="w-full p-2 border rounded bg-transparent"
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose drive type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="awd">AWD</SelectItem>
-                  <SelectItem value="fwd">FWD</SelectItem>
-                  <SelectItem value="rwd">RWD</SelectItem>
-                </SelectContent>
-              </Select>
+                <option value="">Choose drive type</option>
+                <option value="awd">AWD</option>
+                <option value="fwd">FWD</option>
+                <option value="rwd">RWD</option>
+              </select>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="bodyStyle">Body Style</Label>
-              <Select
-                name="bodyStyle"
-                onValueChange={(value) =>
-                  handleSelectChange("bodyStyle", value)
-                }
+              <select
+                id="bodyStyle"
+                {...register("bodyStyle")}
+                className="w-full p-2 border rounded bg-transparent"
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose body style" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="sedan">Sedan</SelectItem>
-                  <SelectItem value="suv">SUV</SelectItem>
-                  <SelectItem value="hatchback">Hatchback</SelectItem>
-                  <SelectItem value="coupe">Coupe</SelectItem>
-                  <SelectItem value="truck">Truck</SelectItem>
-                </SelectContent>
-              </Select>
+                <option value="">Choose body style</option>
+                <option value="sedan">Sedan</option>
+                <option value="suv">SUV</option>
+                <option value="hatchback">Hatchback</option>
+                <option value="coupe">Coupe</option>
+                <option value="truck">Truck</option>
+              </select>
             </div>
 
             <div className="space-y-2">
@@ -232,11 +180,9 @@ export default function FormCart() {
               <Input
                 type="number"
                 id="horsepower"
-                name="horsepower"
                 placeholder="Ex. 150"
-                value={formData.horsepower}
-                onChange={handleInputChange}
-                required
+                {...register("horsepower")}
+                // required
               />
             </div>
 
@@ -245,11 +191,9 @@ export default function FormCart() {
               <Input
                 type="number"
                 id="torque"
-                name="torque"
                 placeholder="Ex. 250"
-                value={formData.torque}
-                onChange={handleInputChange}
-                required
+                {...register("torque")}
+                //   // required
               />
             </div>
           </div>

@@ -1,17 +1,45 @@
 "use client";
 
-import {useForm} from "react-hook-form";
+import {useForm, SubmitHandler} from "react-hook-form";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {carSchema} from "@/validations/addCarSchema";
+
+type Inputs = {
+  brand: string;
+  year: number;
+  vin: string;
+  color: string;
+  mileage: number;
+  fuelType: string;
+  transmission: string;
+  doors: number;
+  driveType: string;
+  bodyStyle: string;
+  horsepower: number;
+  torque: number;
+  model: string;
+};
 
 export default function FormCart() {
-  const {register, handleSubmit} = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: {errors},
+  } = useForm<Inputs>({
+    resolver: zodResolver(carSchema),
+  });
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+  };
 
   return (
     <div className="flex flex-col justify-center items-center bg-gradient-to-t from-slate-50 to-white my-20 p-10">
       <form
-        onSubmit={handleSubmit((data) => console.log(data))}
+        onSubmit={handleSubmit(onSubmit)}
         className="max-w-md mx-auto my-20 space-y-8"
       >
         <div className="space-y-10">
@@ -28,8 +56,12 @@ export default function FormCart() {
                 id="brand"
                 placeholder="Ex. Toyota"
                 {...register("brand")}
-                // required
               />
+              {errors.brand && (
+                <p className="text-red-500 text-sm">
+                  {errors.brand.message?.toString()}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -39,8 +71,12 @@ export default function FormCart() {
                 id="model"
                 placeholder="Ex. Corolla"
                 {...register("model")}
-                // required
               />
+              {errors.model && (
+                <p className="text-red-500 text-sm">
+                  {errors.model.message?.toString()}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -50,8 +86,12 @@ export default function FormCart() {
                 id="year"
                 placeholder="Ex. 2020"
                 {...register("year")}
-                // required
               />
+              {errors.year && (
+                <p className="text-red-500 text-sm">
+                  {errors.year.message?.toString()}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -61,8 +101,12 @@ export default function FormCart() {
                 id="vin"
                 placeholder="Enter VIN"
                 {...register("vin")}
-                // required
               />
+              {errors.vin && (
+                <p className="text-red-500 text-sm">
+                  {errors.vin.message?.toString()}
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -73,8 +117,12 @@ export default function FormCart() {
                   id="color"
                   placeholder="Ex. Red"
                   {...register("color")}
-                  // required
                 />
+                {errors.color && (
+                  <p className="text-red-500 text-sm">
+                    {errors.color.message?.toString()}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="mileage">Mileage</Label>
@@ -83,8 +131,12 @@ export default function FormCart() {
                   id="mileage"
                   placeholder="Ex. 50000"
                   {...register("mileage")}
-                  // required
                 />
+                {errors.mileage && (
+                  <p className="text-red-500 text-sm">
+                    {errors.mileage.message?.toString()}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -134,8 +186,12 @@ export default function FormCart() {
                 id="doors"
                 placeholder="Ex. 2, 4"
                 {...register("doors")}
-                // required
               />
+              {errors.doors && (
+                <p className="text-red-500 text-sm">
+                  {errors.doors.message?.toString()}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -175,8 +231,12 @@ export default function FormCart() {
                 id="horsepower"
                 placeholder="Ex. 150"
                 {...register("horsepower")}
-                // required
               />
+              {errors.horsepower && (
+                <p className="text-red-500 text-sm">
+                  {errors.horsepower.message?.toString()}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -186,8 +246,12 @@ export default function FormCart() {
                 id="torque"
                 placeholder="Ex. 250"
                 {...register("torque")}
-                //   // required
               />
+              {errors.torque && (
+                <p className="text-red-500 text-sm">
+                  {errors.torque.message?.toString()}
+                </p>
+              )}
             </div>
           </div>
         </div>

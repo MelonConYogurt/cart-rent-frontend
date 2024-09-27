@@ -6,6 +6,7 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {carSchema} from "@/validations/addCarSchema";
+import SendCarData from "@/utils/sendCarData";
 
 type Inputs = {
   brand: string;
@@ -32,7 +33,17 @@ export default function FormCart() {
     resolver: zodResolver(carSchema),
   });
 
+  async function SendFormData(data: Inputs) {
+    const fechtData = await SendCarData(data);
+    if (fechtData) {
+      alert("Data send succesfully");
+    } else {
+      alert("Data send fail");
+    }
+  }
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+    SendFormData(data);
     console.log(data);
   };
 

@@ -8,9 +8,9 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {carSchema} from "@/validations/addCarSchema";
+import {Toaster, toast} from "sonner";
 import UpLoadWiget from "@/components/UpLoadWiget";
 import SendCarData from "@/utils/sendCarData";
-import {url} from "inspector";
 
 type Inputs = {
   brand: string;
@@ -18,12 +18,12 @@ type Inputs = {
   vin: string;
   color: string;
   mileage: number;
-  fuelType: string;
-  transmission: string;
-  doors: number;
-  driveType: string;
-  bodyStyle: string;
-  horsepower: number;
+  fuel_type: string;
+  transmission_type: string;
+  number_of_doors: number;
+  drive_type: string;
+  body_type: string;
+  horse_power: number;
   torque: number;
   model: string;
 };
@@ -41,21 +41,31 @@ export default function FormCart() {
   async function SendFormData(data: Inputs) {
     const fechtData = await SendCarData(data);
     if (fechtData) {
-      alert("Data send succesfully");
+      toast.success("Data send succesfully");
     } else {
-      alert("Data send fail");
+      toast.warning("Data send fail");
     }
   }
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    SendFormData(data);
+    if (imageUrl !== "") {
+      const UpdatedData = {
+        ...data,
+        media_url: imageUrl,
+      };
+      console.log(UpdatedData);
+      SendFormData(UpdatedData);
+    } else {
+      toast.warning("No image found, please upload one");
+    }
   };
 
   return (
     <div className="flex flex-col justify-center items-center bg-gradient-to-t from-slate-50 to-white my-20 p-10">
+      <Toaster richColors />
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="max-w-md mx-auto my-20 space-y-8"
+        className="max-w-md mx-auto my-20 space-y-8 ring-1 p-8 rounded-lg"
       >
         <div className="space-y-10">
           <div className="text-center">
@@ -165,10 +175,10 @@ export default function FormCart() {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="fuelType">Fuel Type</Label>
+              <Label htmlFor="fuel_type">Fuel Type</Label>
               <select
-                id="fuelType"
-                {...register("fuelType")}
+                id="fuel_type"
+                {...register("fuel_type")}
                 className="w-full p-2 border rounded bg-transparent"
               >
                 <option value="">Choose fuel type</option>
@@ -181,10 +191,10 @@ export default function FormCart() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="transmission">Transmission</Label>
+              <Label htmlFor="transmission_type">Transmission</Label>
               <select
-                id="transmission"
-                {...register("transmission")}
+                id="transmission_type"
+                {...register("transmission_type")}
                 className="w-full p-2 border rounded bg-transparent"
               >
                 <option value="">Choose transmission type</option>
@@ -198,22 +208,22 @@ export default function FormCart() {
               <Label htmlFor="doors">Number of Doors</Label>
               <Input
                 type="number"
-                id="doors"
+                id="number_of_doors"
                 placeholder="Ex. 2, 4"
-                {...register("doors")}
+                {...register("number_of_doors")}
               />
-              {errors.doors && (
+              {errors.number_of_doors && (
                 <p className="text-red-500 text-sm">
-                  {errors.doors.message?.toString()}
+                  {errors.number_of_doors.message?.toString()}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="driveType">Drive Type</Label>
+              <Label htmlFor="drive_type">Drive Type</Label>
               <select
-                id="driveType"
-                {...register("driveType")}
+                id="drive_type"
+                {...register("drive_type")}
                 className="w-full p-2 border rounded bg-transparent"
               >
                 <option value="">Choose drive type</option>
@@ -224,10 +234,10 @@ export default function FormCart() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bodyStyle">Body Style</Label>
+              <Label htmlFor="body_type">Body Style</Label>
               <select
-                id="bodyStyle"
-                {...register("bodyStyle")}
+                id="body_type"
+                {...register("body_type")}
                 className="w-full p-2 border rounded bg-transparent"
               >
                 <option value="">Choose body style</option>
@@ -240,16 +250,16 @@ export default function FormCart() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="horsepower">Horsepower</Label>
+              <Label htmlFor="horse_power">Horsepower</Label>
               <Input
                 type="number"
-                id="horsepower"
+                id="horse_power"
                 placeholder="Ex. 150"
-                {...register("horsepower")}
+                {...register("horse_power")}
               />
-              {errors.horsepower && (
+              {errors.horse_power && (
                 <p className="text-red-500 text-sm">
-                  {errors.horsepower.message?.toString()}
+                  {errors.horse_power.message?.toString()}
                 </p>
               )}
             </div>
@@ -271,7 +281,7 @@ export default function FormCart() {
           </div>
         </div>
 
-        <div className="space-y-4 w-full flex flex-col gap-5 justify-center items-center">
+        <div className="space-y-4 w-full flex flex-col gap-5 justify-center items-center rounded-lg">
           <UpLoadWiget
             onUploadComplete={(url: string) => setImageUrl(url)}
           ></UpLoadWiget>
@@ -280,7 +290,7 @@ export default function FormCart() {
               <img
                 src={imageUrl}
                 alt="img"
-                className="w-20 h-20 rounded-lg border border-black ring-1"
+                className="w-20 h-20 rounded-lg ring-1"
               />
             </div>
           ) : (

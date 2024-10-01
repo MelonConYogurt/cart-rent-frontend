@@ -31,11 +31,11 @@ function UpLoadWiget({onUploadComplete}: propsCallback) {
       >
         {({open}) => {
           return (
-            <div className="w-full z-0">
+            <div className="w-full ">
               <button
                 type="button"
                 disabled={isDisabled}
-                className="p-5 border bg-white/30 backdrop-blur-md border-white/50 w-full rounded-lg z-10 shadow-lg"
+                className="p-5 border-2 border-dashed border-gray-300 w-full rounded-lg hover:border-gray-400 transition-colors"
                 onClick={() => open()}
               >
                 Upload an Image

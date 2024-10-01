@@ -56,7 +56,7 @@ export default function RootLayout({
                 <span className="sr-only">Open user menu</span>
                 <img
                   className="w-8 h-8 rounded-full"
-                  src="/docs/images/people/profile-picture-3.jpg"
+                  src="https://res.cloudinary.com/divr5jb7h/image/upload/v1726603945/141779507_ed1e6c3fef.jpg"
                   alt="user photo"
                 />
               </button>

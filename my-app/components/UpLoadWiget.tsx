@@ -1,7 +1,6 @@
 "use client";
 
 import {CldUploadWidget} from "next-cloudinary";
-import {useState} from "react";
 
 interface CloudinaryUploadWidgetInfo {
   url: string;
@@ -9,11 +8,10 @@ interface CloudinaryUploadWidgetInfo {
 
 interface propsCallback {
   onUploadComplete: (url: string) => void; //callback function
+  isDisabledProp: boolean;
 }
 
-function UpLoadWiget({onUploadComplete}: propsCallback) {
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
-
+function UpLoadWiget({onUploadComplete, isDisabledProp}: propsCallback) {
   return (
     <>
       <CldUploadWidget
@@ -23,7 +21,6 @@ function UpLoadWiget({onUploadComplete}: propsCallback) {
           const info = results.info as CloudinaryUploadWidgetInfo;
           if (info && typeof info !== "string" && info.url) {
             onUploadComplete(info.url);
-            setIsDisabled(true);
           } else {
             console.error("Upload failed or URL not available");
           }
@@ -34,9 +31,9 @@ function UpLoadWiget({onUploadComplete}: propsCallback) {
             <div className="w-full ">
               <button
                 type="button"
-                disabled={isDisabled}
                 className="p-5 border-2 border-dashed border-gray-300 w-full rounded-lg hover:border-gray-400 transition-colors"
                 onClick={() => open()}
+                disabled={isDisabledProp}
               >
                 Upload an Image
               </button>

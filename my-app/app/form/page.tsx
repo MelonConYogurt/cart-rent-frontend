@@ -33,10 +33,12 @@ export default function FormCart() {
     register,
     handleSubmit,
     formState: {errors},
+    reset,
   } = useForm<Inputs>({
     resolver: zodResolver(carSchema),
   });
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   async function SendFormData(data: Inputs) {
     const fechtData = await SendCarData(data);
@@ -53,12 +55,18 @@ export default function FormCart() {
         ...data,
         media_url: imageUrl,
       };
-      console.log(UpdatedData);
       SendFormData(UpdatedData);
+      reset();
+      setImageUrl("");
     } else {
       toast.warning("No image found, please upload one");
     }
   };
+
+  function handelCancelImg() {
+    setImageUrl("");
+    setIsDisabled(false);
+  }
 
   return (
     <div className="flex flex-col justify-center items-center bg-gradient-to-t from-slate-50 to-white my-20 p-10">
@@ -283,24 +291,45 @@ export default function FormCart() {
 
         <div className="space-y-4 w-full flex flex-col gap-5 justify-center items-center rounded-lg">
           <UpLoadWiget
-            onUploadComplete={(url: string) => setImageUrl(url)}
+            onUploadComplete={(url: string) => {
+              setImageUrl(url);
+              setIsDisabled(true);
+            }}
+            isDisabledProp={isDisabled}
           ></UpLoadWiget>
           {imageUrl ? (
-            <div>
+            <div className="relative">
               <img
                 src={imageUrl}
                 alt="img"
-                className="w-20 h-20 rounded-lg ring-1"
+                className="w-full h-32 object-cover rounded-lg ring-1"
               />
+              <div
+                onClick={() => handelCancelImg()}
+                className="absolute -top-1 -right-1 rounded-full w-5 h-5 bg-blue-600 inline-flex items-center justify-center text-white cursor-pointer"
+              >
+                x
+              </div>
             </div>
           ) : (
             ""
           )}
         </div>
 
-        <Button type="submit" className="w-full">
-          Submit
-        </Button>
+        <div className="flex flex-col gap-2 justify-center items-center">
+          <Button
+            type="submit"
+            className="w-full bg-transparent text-black border border-blue-500 hover:bg-blue-300 transition-colors"
+          >
+            Submit
+          </Button>
+          <Button
+            type="reset"
+            className="w-full bg-transparent text-black border border-red-500 hover:bg-red-300 transition-colors"
+          >
+            Cancel
+          </Button>
+        </div>
       </form>
     </div>
   );

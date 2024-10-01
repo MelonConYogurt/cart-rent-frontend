@@ -3,17 +3,30 @@
 import {CldUploadWidget} from "next-cloudinary";
 import {useState} from "react";
 
-function UpLoadWiget() {
-  const [url, setUrl] = useState("");
-  const [isDisabled, setIsDisabled] = useState(false);
+interface CloudinaryUploadWidgetInfo {
+  url: string;
+}
+
+interface propsCallback {
+  onUploadComplete: (url: string) => void; //callback function
+}
+
+function UpLoadWiget({onUploadComplete}: propsCallback) {
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
   return (
     <>
       <CldUploadWidget
         uploadPreset="aueogygr"
         options={{multiple: false, maxFiles: 1}}
         onSuccess={(results) => {
-          setUrl(results.info.url);
-          setIsDisabled(true);
+          const info = results.info as CloudinaryUploadWidgetInfo;
+          if (info && typeof info !== "string" && info.url) {
+            onUploadComplete(info.url);
+            setIsDisabled(true);
+          } else {
+            console.error("Upload failed or URL not available");
+          }
         }}
       >
         {({open}) => {

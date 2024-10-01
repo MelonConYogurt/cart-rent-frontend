@@ -1,5 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
+import {useState} from "react";
 import {useForm, SubmitHandler} from "react-hook-form";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
@@ -8,6 +10,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {carSchema} from "@/validations/addCarSchema";
 import UpLoadWiget from "@/components/UpLoadWiget";
 import SendCarData from "@/utils/sendCarData";
+import {url} from "inspector";
 
 type Inputs = {
   brand: string;
@@ -33,6 +36,7 @@ export default function FormCart() {
   } = useForm<Inputs>({
     resolver: zodResolver(carSchema),
   });
+  const [imageUrl, setImageUrl] = useState<string>("");
 
   async function SendFormData(data: Inputs) {
     const fechtData = await SendCarData(data);
@@ -267,8 +271,21 @@ export default function FormCart() {
           </div>
         </div>
 
-        <div className="space-y-4 w-full flex justify-center items-center">
-          <UpLoadWiget></UpLoadWiget>
+        <div className="space-y-4 w-full flex flex-col gap-5 justify-center items-center">
+          <UpLoadWiget
+            onUploadComplete={(url: string) => setImageUrl(url)}
+          ></UpLoadWiget>
+          {imageUrl ? (
+            <div>
+              <img
+                src={imageUrl}
+                alt="img"
+                className="w-20 h-20 rounded-lg border border-black ring-1"
+              />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
 
         <Button type="submit" className="w-full">

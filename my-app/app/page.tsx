@@ -1,107 +1,279 @@
-/* eslint-disable @next/next/no-img-element */
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {
+  CalendarIcon,
+  CarIcon,
+  MapPinIcon,
+  PhoneIcon,
+  StarIcon,
+} from "lucide-react";
+
 export default function Home() {
   return (
-    <div>
+    <div className="bg-gray-50">
+      {/* Hero Section */}
       <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
         <div className="mx-auto grid max-w-screen-xl px-4 pb-8 md:grid-cols-12 lg:gap-12 lg:pb-16 xl:gap-0">
           <div className="content-center justify-self-start md:col-span-7 md:text-start">
-            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight dark:text-white md:max-w-2xl md:text-5xl xl:text-6xl">
-              Limited Time Offer!
+            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:max-w-2xl md:text-5xl xl:text-6xl">
+              Alquila tu auto ideal
               <br />
-              Up to 50% OFF!
+              ¡Hasta 50% de descuento!
             </h1>
             <p className="max-w-2xl text-gray-500 dark:text-gray-400 md:mb-12 md:text-lg mb-3 lg:mb-5 lg:text-xl">
-              Don&apos;t Wait - Limited Stock at Unbeatable Prices!
+              Explora nuestra flota de vehículos y encuentra el perfecto para tu
+              próxima aventura.
             </p>
-            <a
-              href="#"
-              className="inline-block rounded-lg bg-primary-700 px-6 py-3.5 text-center font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            >
-              Shop Now
-            </a>
+            <Button size="lg" className="font-semibold">
+              Reserva ahora
+            </Button>
           </div>
           <div className="hidden md:col-span-5 md:mt-0 md:flex">
             <img
-              className="dark:hidden"
-              src="/klipartz.com.png"
-              alt="shopping illustration"
-            />
-            <img
-              className="hidden dark:block"
-              src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/girl-shopping-list-dark.svg"
-              alt="shopping illustration"
+              className="rounded-lg object-cover"
+              src="/placeholder.svg?height=400&width=600"
+              alt="Coche de lujo"
+              width={600}
+              height={400}
             />
           </div>
         </div>
-        <div className="mx-auto grid max-w-screen-xl grid-cols-2 gap-8 text-gray-500 dark:text-gray-400 sm:grid-cols-3 sm:gap-12 lg:grid-cols-6 px-4">
-          <a href="#" className="flex items-center md:justify-center">
-            <svg
-              role="img"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-32 w-32 text-gray-400 group-hover:text-primary transition-colors duration-200 "
-            >
-              <title>Mercedes</title>
-              <path d="M12 0c6.623 0 12 5.377 12 12s-5.377 12-12 12S0 18.623 0 12 5.377 0 12 0zM3.245 17.539A10.357 10.357 0 0012 22.36c3.681 0 6.917-1.924 8.755-4.821L12 14.203zm10.663-6.641l7.267 5.915A10.306 10.306 0 0022.36 12c0-5.577-4.417-10.131-9.94-10.352zm-2.328-9.25C6.057 1.869 1.64 6.423 1.64 12c0 1.737.428 3.374 1.185 4.813l7.267-5.915z" />
-            </svg>
-          </a>
-          <a href="#" className="flex items-center md:justify-center">
-            <svg
-              role="none"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-32 w-32 text-gray-400 group-hover:text-primary transition-colors duration-200 "
-            >
-              <title>Toyota</title>
-              <path d="M12 3.848C5.223 3.848 0 7.298 0 12c0 4.702 5.224 8.152 12 8.152S24 16.702 24 12c0-4.702-5.223-8.152-12-8.152zm7.334 3.839c0 1.08-1.725 1.913-4.488 2.246-.26-2.58-1.005-4.279-1.963-4.913 2.948.184 6.45 1.227 6.45 2.667zM12 16.401c-.96 0-1.746-1.5-1.808-4.389.577.047 1.18.072 1.808.072.628 0 1.23-.025 1.807-.072-.061 2.89-.847 4.389-1.807 4.389zm0-6.308c-.59 0-1.155-.019-1.69-.054.261-1.728.92-3.15 1.69-3.15.77 0 1.428 1.422 1.689 3.15-.535.034-1.099.054-1.689.054zm-.882-5.075c-.956.633-1.706 2.333-1.964 4.915C6.391 9.6 4.665 8.767 4.665 7.687c0-1.44 3.504-2.49 6.453-2.669zM2.037 11.68a5.265 5.265 0 011.048-3.164c.27 1.547 2.522 2.881 5.972 3.37V12c0 3.772.879 6.203 2.087 6.97-5.107-.321-9.107-3.48-9.107-7.29zm10.823 7.29c1.207-.767 2.087-3.198 2.087-6.97v-.115c3.447-.488 5.704-1.826 5.972-3.37a5.26 5.26 0 011.049 3.165c-.004 3.81-4.008 6.969-9.109 7.29z" />
-            </svg>
-          </a>
-          <a href="#" className="flex items-center md:justify-center">
-            <svg
-              role="img"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-32 w-32 text-gray-400 group-hover:text-primary transition-colors duration-200 "
-            >
-              <title>Audi</title>
-              <path d="M19.848,7.848c-0.992,0-1.902,0.348-2.616,0.928c-0.714-0.58-1.624-0.928-2.616-0.928 c-0.992,0-1.902,0.348-2.616,0.928c-0.714-0.58-1.624-0.928-2.616-0.928c-0.992,0-1.902,0.348-2.616,0.928 c-0.714-0.58-1.624-0.928-2.616-0.928C1.859,7.848,0,9.707,0,12s1.859,4.152,4.152,4.152c0.992,0,1.902-0.348,2.616-0.928 c0.714,0.58,1.624,0.928,2.616,0.928c0.992,0,1.902-0.348,2.616-0.928c0.714,0.58,1.624,0.928,2.616,0.928 c0.992,0,1.902-0.348,2.616-0.928c0.714,0.58,1.624,0.928,2.616,0.928C22.141,16.152,24,14.293,24,12S22.141,7.848,19.848,7.848z M17.232,13.866c-0.376-0.526-0.598-1.17-0.598-1.866c0-0.696,0.222-1.34,0.598-1.866c0.376,0.526,0.598,1.17,0.598,1.866 C17.83,12.696,17.608,13.34,17.232,13.866z M12,13.866c-0.376-0.526-0.598-1.17-0.598-1.866c0-0.696,0.222-1.34,0.598-1.866 c0.376,0.526,0.598,1.17,0.598,1.866C12.598,12.696,12.376,13.34,12,13.866z M6.768,13.866C6.392,13.34,6.17,12.696,6.17,12 c0-0.696,0.222-1.34,0.598-1.866C7.144,10.66,7.366,11.304,7.366,12C7.366,12.696,7.144,13.34,6.768,13.866z M0.938,12 c0-1.775,1.439-3.214,3.214-3.214c0.736,0,1.414,0.248,1.956,0.665C5.56,10.154,5.232,11.039,5.232,12 c0,0.961,0.328,1.846,0.876,2.549c-0.542,0.416-1.22,0.665-1.956,0.665C2.377,15.214,0.938,13.775,0.938,12z M7.428,14.549 C7.976,13.846,8.304,12.961,8.304,12c0-0.961-0.328-1.846-0.876-2.549c0.542-0.416,1.22-0.665,1.956-0.665 c0.736,0,1.414,0.248,1.956,0.665c-0.549,0.704-0.876,1.588-0.876,2.549c0,0.961,0.328,1.846,0.876,2.549 c-0.542,0.416-1.22,0.665-1.956,0.665C8.648,15.214,7.97,14.966,7.428,14.549z M12.66,14.549c0.549-0.704,0.876-1.588,0.876-2.549 c0-0.961-0.328-1.846-0.876-2.55c0.542-0.416,1.22-0.665,1.956-0.665s1.414,0.248,1.956,0.665 c-0.549,0.704-0.876,1.588-0.876,2.549c0,0.961,0.328,1.846,0.876,2.549c-0.542,0.416-1.22,0.665-1.956,0.665 C13.88,15.214,13.202,14.966,12.66,14.549z M19.848,15.214c-0.736,0-1.414-0.248-1.956-0.665c0.548-0.704,0.876-1.588,0.876-2.549 c0-0.961-0.328-1.846-0.876-2.549c0.542-0.416,1.22-0.665,1.956-0.665c1.775,0,3.214,1.439,3.214,3.214 S21.623,15.214,19.848,15.214z" />
-            </svg>
-          </a>
-          <a href="#" className="flex items-center md:justify-center">
-            <svg
-              role="img"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-32 w-32 text-gray-400 group-hover:text-primary transition-colors duration-200 "
-            >
-              <title>Mitsubishi</title>
-              <path d="M8 22.38H0l4-6.92h8zm8 0h8l-4-6.92h-8zm0-13.84l-4-6.92-4 6.92 4 6.92Z" />
-            </svg>
-          </a>
-          <a href="#" className="flex items-center md:justify-center">
-            <svg
-              role="img"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-32 w-32 text-gray-400 group-hover:text-primary transition-colors duration-200 "
-            >
-              <title>Chevrolet</title>
-              <path d="M23.905 9.784H15.92V8.246a.157.157 0 00-.157-.158H8.238a.157.157 0 00-.157.158v1.538H2.358c-.087 0-.193.07-.237.158L.02 14.058c-.045.088-.011.157.077.157H8.08v1.54c0 .086.07.157.157.157h7.525c.087 0 .157-.07.157-.157v-1.54h5.723c.087 0 .193-.07.238-.157l2.1-4.116c.045-.087.011-.158-.076-.158m-2.494.996l-1.244 2.437h-5.232v1.708H9.07v-1.708H2.595L3.84 10.78h5.232V9.073h5.864v1.707z" />
-            </svg>
-          </a>
-          <a href="#" className="flex items-center md:justify-center">
-            <svg
-              role="img"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-32 w-32 text-gray-400 group-hover:text-primary transition-colors duration-200 "
-            >
-              <title>Mazda</title>
-              <path d="M11.999 12.876c-.036 0-.105-.046-.222-.26a7.531 7.531 0 00-1.975-2.353A8.255 8.255 0 007.7 9.065a17.945 17.945 0 00-.345-.136c-1.012-.4-2.061-.813-3.035-1.377A8.982 8.982 0 014 7.362c.194-.34.42-.665.67-.962a6.055 6.055 0 011.253-1.131 7.126 7.126 0 011.618-.806c1.218-.434 2.677-.647 4.458-.649 1.783.002 3.241.215 4.459.65a7.097 7.097 0 011.619.805c.471.319.892.699 1.253 1.13.25.298.475.623.67.963-.103.064-.212.129-.32.192-.976.564-2.023.977-3.037 1.376l-.345.136a8.26 8.26 0 00-2.1 1.198 7.519 7.519 0 00-1.975 2.354c-.117.213-.187.259-.224.259m0 7.072c-1.544-.002-2.798-.129-3.83-.387-1.013-.252-1.855-.64-2.576-1.188a5.792 5.792 0 01-1.392-1.537 7.607 7.607 0 01-.81-1.768 10.298 10.298 0 01-.467-2.983c0-.674.047-1.313.135-1.901 1.106.596 2.153.895 3.08 1.16l.215.06c1.29.371 2.314.857 3.135 1.488.475.368.89.793 1.23 1.264.369.508.663 1.088.877 1.725.096.289.2.468.403.468.207 0 .308-.18.405-.468a6.124 6.124 0 012.107-2.988c.82-.632 1.845-1.118 3.135-1.489l.216-.06c.926-.265 1.973-.564 3.078-1.16.09.589.136 1.227.136 1.9 0 .458-.046 1.664-.465 2.984a7.626 7.626 0 01-.809 1.768 5.789 5.789 0 01-1.396 1.537c-.723.548-1.565.936-2.574 1.188-1.035.258-2.288.385-3.833.387m9.692-14.556c-1.909-2.05-4.99-2.99-9.692-2.995-4.7.005-7.781.944-9.69 2.994C.89 6.913 0 9.018 0 11.874c0 1.579.39 5.6 3.564 7.676 1.9 1.242 4.354 2.046 8.435 2.052 4.083-.006 6.536-.81 8.437-2.052C23.609 17.474 24 13.452 24 11.874c0-2.848-.897-4.968-2.31-6.483Z" />
-            </svg>
-          </a>
+      </section>
+
+      {/* Search Section */}
+      <section className="py-12 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Encuentra tu vehículo
+          </h2>
+          <div className="flex flex-wrap -mx-3 mb-6">
+            <div className="w-full md:w-1/4 px-3 mb-6 md:mb-0">
+              <Input
+                type="text"
+                placeholder="Ubicación de recogida"
+                className="w-full"
+              />
+            </div>
+            <div className="w-full md:w-1/4 px-3 mb-6 md:mb-0">
+              <Input
+                type="date"
+                placeholder="Fecha de recogida"
+                className="w-full"
+              />
+            </div>
+            <div className="w-full md:w-1/4 px-3 mb-6 md:mb-0">
+              <Input
+                type="date"
+                placeholder="Fecha de devolución"
+                className="w-full"
+              />
+            </div>
+            <div className="w-full md:w-1/4 px-3 mb-6 md:mb-0">
+              <Button className="w-full">Buscar</Button>
+            </div>
+          </div>
         </div>
       </section>
+
+      {/* Featured Cars Section */}
+      <section className="py-12 bg-gray-100">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Vehículos destacados
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((car) => (
+              <div
+                key={car}
+                className="bg-white rounded-lg shadow-md overflow-hidden"
+              >
+                <img
+                  src={`/placeholder.svg?height=200&width=300`}
+                  alt={`Coche ${car}`}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">
+                    Modelo de Coche {car}
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Descripción breve del vehículo.
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-2xl font-bold">$50/día</span>
+                    <Button variant="outline">Reservar</Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us Section */}
+      <section className="py-12 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-8">
+            ¿Por qué elegirnos?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <CarIcon className="mx-auto h-12 w-12 text-primary mb-4" />
+              <h3 className="text-xl font-semibold mb-2">
+                Amplia selección de vehículos
+              </h3>
+              <p className="text-gray-600">
+                Desde económicos hasta de lujo, tenemos el coche perfecto para
+                ti.
+              </p>
+            </div>
+            <div className="text-center">
+              <MapPinIcon className="mx-auto h-12 w-12 text-primary mb-4" />
+              <h3 className="text-xl font-semibold mb-2">
+                Ubicaciones convenientes
+              </h3>
+              <p className="text-gray-600">
+                Recoge y devuelve tu vehículo en múltiples ubicaciones.
+              </p>
+            </div>
+            <div className="text-center">
+              <PhoneIcon className="mx-auto h-12 w-12 text-primary mb-4" />
+              <h3 className="text-xl font-semibold mb-2">
+                Atención al cliente 24/7
+              </h3>
+              <p className="text-gray-600">
+                Estamos aquí para ayudarte en cualquier momento.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-12 bg-gray-100">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Lo que dicen nuestros clientes
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[1, 2].map((testimonial) => (
+              <div
+                key={testimonial}
+                className="bg-white p-6 rounded-lg shadow-md"
+              >
+                <div className="flex items-center mb-4">
+                  <img
+                    src={`/placeholder.svg?height=50&width=50`}
+                    alt={`Cliente ${testimonial}`}
+                    className="w-12 h-12 rounded-full mr-4"
+                  />
+                  <div>
+                    <h4 className="font-semibold">Cliente {testimonial}</h4>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <StarIcon
+                          key={i}
+                          className="h-5 w-5 text-yellow-400 fill-current"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-gray-600">
+                  "Excelente servicio y vehículos en perfectas condiciones.
+                  ¡Definitivamente volveré a alquilar con ellos!"
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Brand Logos Section */}
+      <section className="py-12 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Nuestras marcas
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+            {/* Your existing brand logos here */}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="py-12 bg-primary text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">
+            ¿Listo para tu próxima aventura?
+          </h2>
+          <p className="mb-8 text-lg">
+            Reserva tu vehículo hoy y obtén un 10% de descuento en tu primera
+            reserva.
+          </p>
+          <Button size="lg" variant="secondary" className="font-semibold">
+            Reserva ahora
+          </Button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-8">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Sobre nosotros</h3>
+              <p className="text-sm">
+                Somos tu mejor opción para alquilar vehículos de calidad a
+                precios competitivos.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Enlaces rápidos</h3>
+              <ul className="text-sm">
+                <li className="mb-2">
+                  <a href="#" className="hover:underline">
+                    Inicio
+                  </a>
+                </li>
+                <li className="mb-2">
+                  <a href="#" className="hover:underline">
+                    Vehículos
+                  </a>
+                </li>
+                <li className="mb-2">
+                  <a href="#" className="hover:underline">
+                    Reservas
+                  </a>
+                </li>
+                <li className="mb-2">
+                  <a href="#" className="hover:underline">
+                    Contacto
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Contacto</h3>
+              <p className="text-sm mb-2">Teléfono: (123) 456-7890</p>
+              <p className="text-sm mb-2">Email: info@tualquiler.com</p>
+              <p className="text-sm">Dirección: Calle Principal 123, Ciudad</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Síguenos</h3>
+              <div className="flex space-x-4">
+                {/* Add your social media icons here */}
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm">
+            <p>
+              &copy; 2024 Tu Empresa de Alquiler de Autos. Todos los derechos
+              reservados.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

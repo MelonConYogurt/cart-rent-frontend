@@ -19,4 +19,6 @@ export interface Datum {
   mediaUrl: string;
   fuelType: string;
   transmissionType: string;
+  driveType: string;
+  bodyType: string;
 }

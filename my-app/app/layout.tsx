@@ -177,37 +177,60 @@ export default function RootLayout({
         </nav>
         {children}
 
-        <footer className="bg-white rounded-lg shadow m-4 dark:bg-gray-800">
-          <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-            <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-              © 2023{" "}
-              <a href="https://flowbite.com/" className="hover:underline">
-                Flowbite™
-              </a>
-              . All Rights Reserved.
-            </span>
-            <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-              <li>
-                <a href="#" className="hover:underline me-4 md:me-6">
-                  About
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline me-4 md:me-6">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline me-4 md:me-6">
-                  Licensing
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  Contact
-                </a>
-              </li>
-            </ul>
+        <footer className="bg-gray-900 text-white py-8">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Sobre nosotros</h3>
+                <p className="text-sm">
+                  Somos tu mejor opción para alquilar vehículos de calidad a
+                  precios competitivos.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Enlaces rápidos</h3>
+                <ul className="text-sm">
+                  <li className="mb-2">
+                    <a href="#" className="hover:underline">
+                      Inicio
+                    </a>
+                  </li>
+                  <li className="mb-2">
+                    <a href="#" className="hover:underline">
+                      Vehículos
+                    </a>
+                  </li>
+                  <li className="mb-2">
+                    <a href="#" className="hover:underline">
+                      Reservas
+                    </a>
+                  </li>
+                  <li className="mb-2">
+                    <a href="#" className="hover:underline">
+                      Contacto
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Contacto</h3>
+                <p className="text-sm mb-2">Teléfono: (123) 456-7890</p>
+                <p className="text-sm mb-2">Email: info@tualquiler.com</p>
+                <p className="text-sm">
+                  Dirección: Calle Principal 123, Ciudad
+                </p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Síguenos</h3>
+                <div className="flex space-x-4"></div>
+              </div>
+            </div>
+            <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm">
+              <p>
+                &copy; 2024 Tu Empresa de Alquiler de Autos. Todos los derechos
+                reservados.
+              </p>
+            </div>
           </div>
         </footer>
       </body>

@@ -1,18 +1,15 @@
-async function GetAllCarsindo() {
-  const query = {
-    query:
-      "{ data { brand model year vin color mileage numberOfDoors horsePower torque mediaUrl fuelType transmissionType } }",
-  };
-
+async function GetAllCarsInfo() {
   try {
-    const response = await fetch("http://127.0.0.1:8000/graphql?query=", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        // Authorization: `Bearer `,
-      },
-      body: JSON.stringify(query),
-    });
+    const response = await fetch(
+      "http://127.0.0.1:8000/graphql?query={ data { brand model year vin color mileage numberOfDoors horsePower torque mediaUrl fuelType transmissionType } }",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer `,
+        },
+      }
+    );
     if (!response.ok) {
       throw new Error(`Fail: ${response.status}`);
     } else {
@@ -25,4 +22,4 @@ async function GetAllCarsindo() {
   }
 }
 
-export default GetAllCarsindo;
+export default GetAllCarsInfo;

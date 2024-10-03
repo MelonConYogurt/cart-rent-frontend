@@ -50,6 +50,11 @@ export const carSchema = z.object({
       .min(50, "Must have at least 50 horsepower")
   ),
 
+  price: z.preprocess(
+    (val) => parseInt(val as string, 10),
+    z.number().int().positive("Price must be a positive number")
+  ),
+
   // Torque preprocessing: converts string to number
   torque: z.preprocess(
     (val) => parseInt(val as string, 10),

@@ -3,8 +3,9 @@
 import GetAllCarsInfo from "@/utils/getAllCarsInfo";
 import {useState, useEffect} from "react";
 import {Data} from "@/types/tsTypes";
-import {MultipleCarInfo} from "@/components/CardCarIndo";
+import {MultipleCarInfo} from "@/components/CardCarInfo";
 import {toast, Toaster} from "sonner";
+import {Skeleton} from "@/components/ui/skeleton";
 
 function ListCars() {
   const [data, setData] = useState<Data>();
@@ -30,14 +31,22 @@ function ListCars() {
         <h2 className="text-xl">Filtros</h2>
       </div>
       <Toaster richColors />
-      {data ? (
+      {data && data.data.length > 0 ? (
         <MultipleCarInfo data={data.data} />
       ) : (
-        <div className="flex justify-center items-center">
-          <h1 className="text-black text-2xl">
-            We are having problems, reload the page 😕
-          </h1>
-        </div>
+        <section className="h-screen flex flex-wrap gap-5 mx-5 my-10">
+          {[...Array(6)].map((_, index) => (
+            <div key={index} className="space-y-3">
+              <Skeleton className="h-[225px] w-[450px] rounded-xl animate-pulse" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+          ))}
+        </section>
       )}
     </div>
   );

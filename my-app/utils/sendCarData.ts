@@ -27,6 +27,7 @@ async function SendCarDataGraphQL(data: Datum) {
               transmissionType: "${data.transmissionType}",
               driveType: "${data.driveType}",
               bodyType: "${data.bodyType}"
+              price: "${data.price}"
             }) {
               vin
             }

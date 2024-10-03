@@ -22,9 +22,16 @@ export interface Datum {
   mediaUrl: string;
   fuelType: string;
   transmissionType: string;
+  driveType: string;
+  bodyType: string;
+  status: boolean;
+  price: number;
+  avaible: boolean;
+  rent_days: number;
+  last_service: string;
 }
 
-export function SingleCardInfo({info}: {info: Datum}) {
+export function SingleCardInfoAdmin({info}: {info: Datum}) {
   return (
     <Card className="w-full max-w-md mx-auto overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105">
       <div className="relative h-64 w-full overflow-hidden">
@@ -46,6 +53,9 @@ export function SingleCardInfo({info}: {info: Datum}) {
               {info.color}
             </span>
           </div>
+        </div>
+        <div>
+          <p></p>
         </div>
       </div>
       <CardContent className="p-6 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
@@ -104,11 +114,11 @@ function InfoItem({
   );
 }
 
-export function MultipleCarInfo({data}: Data) {
+export function MultipleCarInfoAdmin({data}: Data) {
   return (
     <div className="flex flex-wrap gap-8 p-8 bg-gradient-to-br from-gray-100 to-gray-200">
       {data.map((car) => (
-        <SingleCardInfo key={car.vin} info={car} />
+        <SingleCardInfoAdmin key={car.vin} info={car} />
       ))}
     </div>
   );

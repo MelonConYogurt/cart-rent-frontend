@@ -21,4 +21,9 @@ export interface Datum {
   transmissionType: string;
   driveType: string;
   bodyType: string;
+  status?: boolean;
+  price: number;
+  avaible?: boolean;
+  rent_days?: number;
+  last_service?: string;
 }

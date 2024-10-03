@@ -10,7 +10,8 @@ import {
 import {checkRole} from "@/utils/roles";
 import localFont from "next/font/local";
 import Link from "next/link";
-import {Menu, X} from "lucide-react";
+import {Menu} from "lucide-react";
+import DashboardMenu from "@/components/DashboardMenu";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -79,14 +80,7 @@ export default function RootLayout({
                     >
                       Pricing
                     </Link>
-                    {checkRole("admin") && (
-                      <Link
-                        href="/form"
-                        className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
-                      >
-                        Add car
-                      </Link>
-                    )}
+                    {checkRole("admin") && <DashboardMenu />}
                   </div>
                 </div>
                 <div className="hidden md:block">
@@ -98,7 +92,7 @@ export default function RootLayout({
                     </SignInButton>
                   </SignedOut>
                   <SignedIn>
-                    <UserButton afterSignOutUrl="/" />
+                    <UserButton />
                   </SignedIn>
                 </div>
                 <div className="md:hidden flex items-center">

@@ -171,6 +171,21 @@ export default function ImprovedCarForm() {
                   )}
                 </div>
               </div>
+              <div>
+                <div className="space-y-2">
+                  <Label htmlFor="mileage">Precio de alquiler por dia</Label>
+                  <Input
+                    type="number"
+                    placeholder="Ej. $ 100.000"
+                    {...register("price")}
+                  />
+                  {errors.price && (
+                    <p className="text-sm text-red-500">
+                      {errors.price.message}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className="space-y-4">

@@ -7,6 +7,8 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import {checkRole} from "@/utils/roles";
+
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -51,6 +53,15 @@ export default function RootLayout({
               <li>
                 <a href="/pricing">Pricing</a>
               </li>
+              {!checkRole("admin") ? (
+                ""
+              ) : (
+                <li>
+                  <a href="/form" className="hover:underline">
+                    Add car
+                  </a>
+                </li>
+              )}
               <li>
                 <SignedOut>
                   <SignInButton />

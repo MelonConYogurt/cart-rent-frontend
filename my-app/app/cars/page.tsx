@@ -25,7 +25,10 @@ function ListCars() {
   }, []);
 
   return (
-    <div>
+    <div className="flex felx-row">
+      <div className="h-full w-96 flex flex-col justify-center items-center">
+        <h2 className="text-xl">Filtros</h2>
+      </div>
       <Toaster richColors />
       {data ? (
         <MultipleCarInfo data={data.data} />

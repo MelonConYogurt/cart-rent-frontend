@@ -106,7 +106,7 @@ function InfoItem({
 
 export function MultipleCarInfo({data}: Data) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-8 bg-gradient-to-br from-gray-100 to-gray-200">
+    <div className="flex flex-wrap gap-8 p-8 bg-gradient-to-br from-gray-100 to-gray-200">
       {data.map((car) => (
         <SingleCardInfo key={car.vin} info={car} />
       ))}

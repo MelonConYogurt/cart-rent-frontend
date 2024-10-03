@@ -2,345 +2,388 @@
 "use client";
 
 import {useState} from "react";
-import {useForm, SubmitHandler} from "react-hook-form";
+import {useForm, SubmitHandler, Controller} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {z} from "zod";
+import {Toaster, toast} from "sonner";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {carSchema} from "@/validations/addCarSchema";
-import {Toaster, toast} from "sonner";
-import UpLoadWiget from "@/components/UpLoadWiget";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import {Separator} from "@/components/ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import UpLoadWidget from "@/components/UpLoadWiget";
 import SendCarData from "@/utils/sendCarData";
-import {z} from "zod";
+import {carSchema} from "@/validations/addCarSchema";
 
 type Inputs = z.infer<typeof carSchema>;
 
-export default function FormCart() {
+export default function ImprovedCarForm() {
   const {
     register,
+    control,
     handleSubmit,
-    formState: {errors},
+    formState: {errors, isSubmitting},
     reset,
   } = useForm<Inputs>({
     resolver: zodResolver(carSchema),
   });
+
   const [imageUrl, setImageUrl] = useState<string>("");
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [isUploadDisabled, setIsUploadDisabled] = useState<boolean>(false);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log("Form submitted", data);
-    if (imageUrl) {
-      const updatedData = {
-        ...data,
-        mediaUrl: imageUrl,
-      };
-      try {
-        const fetchData = await SendCarData(updatedData);
-        if (fetchData) {
-          toast.success("Data sent successfully");
-          reset();
-          setImageUrl("");
-          setIsDisabled(false);
-        } else {
-          toast.warning("Data send failed");
-        }
-      } catch (error) {
-        console.error("Error sending data:", error);
-        toast.error("An error occurred while sending data");
+    if (!imageUrl) {
+      toast.warning("Por favor, sube una imagen");
+      return;
+    }
+
+    try {
+      const updatedData = {...data, mediaUrl: imageUrl};
+      const fetchData = await SendCarData(updatedData);
+
+      if (fetchData) {
+        toast.success("Datos del vehículo enviados con éxito");
+        reset();
+        setImageUrl("");
+        setIsUploadDisabled(false);
+      } else {
+        toast.error("Error al enviar los datos del vehículo");
       }
-    } else {
-      toast.warning("No image found, please upload one");
+    } catch (error) {
+      console.error("Error al enviar datos:", error);
+      toast.error("Ocurrió un error al enviar los datos");
     }
   };
 
-  function handelCancelImg() {
+  const handleCancelImg = () => {
     setImageUrl("");
-    setIsDisabled(false);
-  }
+    setIsUploadDisabled(false);
+  };
 
   return (
-    <div className="flex flex-col justify-center items-center bg-gradient-to-t from-slate-50 to-white my-20 p-10">
+    <div className="container mx-auto py-10">
       <Toaster richColors />
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="max-w-md mx-auto my-20 space-y-8 ring-1 p-8 rounded-lg"
-      >
-        <div className="space-y-10">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold">Add New Car</h1>
-            <div className="w-full h-1 bg-gradient-to-r from-blue-300 to-blue-600 mt-2 animate-pulse rounded-lg" />
-          </div>
-
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="brand">Brand</Label>
-              <Input
-                type="text"
-                id="brand"
-                placeholder="Ex. Toyota"
-                {...register("brand")}
-              />
-              {errors.brand && (
-                <p className="text-red-500 text-sm">
-                  {errors.brand.message?.toString()}
-                </p>
-              )}
+      <Card className="max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">
+            Agregar Nuevo Vehículo
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Información Básica</h2>
+              <Separator />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="brand">Marca</Label>
+                  <Input
+                    id="brand"
+                    placeholder="Ej. Toyota"
+                    {...register("brand")}
+                  />
+                  {errors.brand && (
+                    <p className="text-sm text-red-500">
+                      {errors.brand.message}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="model">Modelo</Label>
+                  <Input
+                    id="model"
+                    placeholder="Ej. Corolla"
+                    {...register("model")}
+                  />
+                  {errors.model && (
+                    <p className="text-sm text-red-500">
+                      {errors.model.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="year">Año</Label>
+                  <Input
+                    type="number"
+                    id="year"
+                    placeholder="Ej. 2020"
+                    {...register("year")}
+                  />
+                  {errors.year && (
+                    <p className="text-sm text-red-500">
+                      {errors.year.message}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="vin">VIN</Label>
+                  <Input
+                    id="vin"
+                    placeholder="Ingrese VIN"
+                    {...register("vin")}
+                  />
+                  {errors.vin && (
+                    <p className="text-sm text-red-500">{errors.vin.message}</p>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="color">Color</Label>
+                  <Input
+                    id="color"
+                    placeholder="Ej. Rojo"
+                    {...register("color")}
+                  />
+                  {errors.color && (
+                    <p className="text-sm text-red-500">
+                      {errors.color.message}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="mileage">Kilometraje</Label>
+                  <Input
+                    type="number"
+                    id="mileage"
+                    placeholder="Ej. 50000"
+                    {...register("mileage")}
+                  />
+                  {errors.mileage && (
+                    <p className="text-sm text-red-500">
+                      {errors.mileage.message}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="model">Model</Label>
-              <Input
-                type="text"
-                id="model"
-                placeholder="Ex. Corolla"
-                {...register("model")}
-              />
-              {errors.model && (
-                <p className="text-red-500 text-sm">
-                  {errors.model.message?.toString()}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="year">Year</Label>
-              <Input
-                type="number"
-                id="year"
-                placeholder="Ex. 2020"
-                {...register("year")}
-              />
-              {errors.year && (
-                <p className="text-red-500 text-sm">
-                  {errors.year.message?.toString()}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="vin">VIN (Vehicle Identification Number)</Label>
-              <Input
-                type="text"
-                id="vin"
-                placeholder="Enter VIN"
-                {...register("vin")}
-              />
-              {errors.vin && (
-                <p className="text-red-500 text-sm">
-                  {errors.vin.message?.toString()}
-                </p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="color">Color</Label>
-                <Input
-                  type="text"
-                  id="color"
-                  placeholder="Ex. Red"
-                  {...register("color")}
-                />
-                {errors.color && (
-                  <p className="text-red-500 text-sm">
-                    {errors.color.message?.toString()}
-                  </p>
-                )}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Detalles Técnicos</h2>
+              <Separator />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fuelType">Tipo de Combustible</Label>
+                  <Controller
+                    name="fuelType"
+                    control={control}
+                    render={({field}) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccione tipo de combustible" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="electric">Eléctrico</SelectItem>
+                          <SelectItem value="diesel">Diésel</SelectItem>
+                          <SelectItem value="gas">Gas</SelectItem>
+                          <SelectItem value="gasoline">Gasolina</SelectItem>
+                          <SelectItem value="hybrid">Híbrido</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.fuelType && (
+                    <p className="text-sm text-red-500">
+                      {errors.fuelType.message}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="transmissionType">Transmisión</Label>
+                  <Controller
+                    name="transmissionType"
+                    control={control}
+                    render={({field}) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccione tipo de transmisión" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="automatic">Automática</SelectItem>
+                          <SelectItem value="manual">Manual</SelectItem>
+                          <SelectItem value="cvt">CVT</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.transmissionType && (
+                    <p className="text-sm text-red-500">
+                      {errors.transmissionType.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="numberOfDoors">Número de Puertas</Label>
+                  <Input
+                    type="number"
+                    id="numberOfDoors"
+                    placeholder="Ej. 2, 4"
+                    {...register("numberOfDoors")}
+                  />
+                  {errors.numberOfDoors && (
+                    <p className="text-sm text-red-500">
+                      {errors.numberOfDoors.message}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="driveType">Tipo de Tracción</Label>
+                  <Controller
+                    name="driveType"
+                    control={control}
+                    render={({field}) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccione tipo de tracción" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="awd">AWD</SelectItem>
+                          <SelectItem value="fwd">FWD</SelectItem>
+                          <SelectItem value="rwd">RWD</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.driveType && (
+                    <p className="text-sm text-red-500">
+                      {errors.driveType.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="bodyType">Tipo de Carrocería</Label>
+                  <Controller
+                    name="bodyType"
+                    control={control}
+                    render={({field}) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccione tipo de carrocería" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="sedan">Sedán</SelectItem>
+                          <SelectItem value="suv">SUV</SelectItem>
+                          <SelectItem value="hatchback">Hatchback</SelectItem>
+                          <SelectItem value="coupe">Coupé</SelectItem>
+                          <SelectItem value="truck">Camioneta</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.bodyType && (
+                    <p className="text-sm text-red-500">
+                      {errors.bodyType.message}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="horsePower">Caballos de Fuerza</Label>
+                  <Input
+                    type="number"
+                    id="horsePower"
+                    placeholder="Ej. 150"
+                    {...register("horsePower")}
+                  />
+                  {errors.horsePower && (
+                    <p className="text-sm text-red-500">
+                      {errors.horsePower.message}
+                    </p>
+                  )}
+                </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="mileage">Mileage</Label>
+                <Label htmlFor="torque">Torque (Nm)</Label>
                 <Input
                   type="number"
-                  id="mileage"
-                  placeholder="Ex. 50000"
-                  {...register("mileage")}
+                  id="torque"
+                  placeholder="Ej. 250"
+                  {...register("torque")}
                 />
-                {errors.mileage && (
-                  <p className="text-red-500 text-sm">
-                    {errors.mileage.message?.toString()}
+                {errors.torque && (
+                  <p className="text-sm text-red-500">
+                    {errors.torque.message}
                   </p>
                 )}
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="space-y-10">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold">Details</h2>
-            <div className="w-full h-1 bg-gradient-to-r from-blue-300 to-blue-600 mt-2 animate-pulse rounded-lg" />
-          </div>
-
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="fuelType">Fuel Type</Label>
-              <select
-                id="fuelType"
-                {...register("fuelType")}
-                className="w-full p-2 border rounded bg-transparent"
-              >
-                <option value="">Choose fuel type</option>
-                <option value="electric">Electric</option>
-                <option value="diesel">Diesel</option>
-                <option value="gas">Gas</option>
-                <option value="gasoline">Gasoline</option>
-                <option value="hybrid">Hybrid</option>
-              </select>
-              {errors.fuelType?.message && (
-                <p className="text-red-500 text-sm">
-                  {errors.fuelType.message?.toString()}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="transmissionType">Transmission</Label>
-              <select
-                id="transmissionType"
-                {...register("transmissionType")}
-                className="w-full p-2 border rounded bg-transparent"
-              >
-                <option value="">Choose transmission type</option>
-                <option value="automatic">Automatic</option>
-                <option value="manual">Manual</option>
-                <option value="cvt">CVT</option>
-              </select>
-              {errors.transmissionType?.message && (
-                <p className="text-red-500 text-sm">
-                  {errors.transmissionType.message?.toString()}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="doors">Number of Doors</Label>
-              <Input
-                type="number"
-                id="numberOfDoors"
-                placeholder="Ex. 2, 4"
-                {...register("numberOfDoors")}
-              />
-              {errors.numberOfDoors && (
-                <p className="text-red-500 text-sm">
-                  {errors.numberOfDoors.message?.toString()}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="driveType">Drive Type</Label>
-              <select
-                id="driveType"
-                {...register("driveType")}
-                className="w-full p-2 border rounded bg-transparent"
-              >
-                <option value="">Choose drive type</option>
-                <option value="awd">AWD</option>
-                <option value="fwd">FWD</option>
-                <option value="rwd">RWD</option>
-              </select>
-              {errors.driveType?.message && (
-                <p className="text-red-500 text-sm">
-                  {errors.driveType.message?.toString()}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="bodyType">Body Style</Label>
-              <select
-                id="bodyType"
-                {...register("bodyType")}
-                className="w-full p-2 border rounded bg-transparent"
-              >
-                <option value="">Choose body style</option>
-                <option value="sedan">Sedan</option>
-                <option value="suv">SUV</option>
-                <option value="hatchback">Hatchback</option>
-                <option value="coupe">Coupe</option>
-                <option value="truck">Truck</option>
-              </select>
-              {errors.bodyType?.message && (
-                <p className="text-red-500 text-sm">
-                  {errors.bodyType.message?.toString()}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="horsePower">Horsepower</Label>
-              <Input
-                type="number"
-                id="horsePower"
-                placeholder="Ex. 150"
-                {...register("horsePower")}
-              />
-              {errors.horsePower && (
-                <p className="text-red-500 text-sm">
-                  {errors.horsePower.message?.toString()}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="torque">Torque (Nm)</Label>
-              <Input
-                type="number"
-                id="torque"
-                placeholder="Ex. 250"
-                {...register("torque")}
-              />
-              {errors.torque && (
-                <p className="text-red-500 text-sm">
-                  {errors.torque.message?.toString()}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-4 w-full flex flex-col gap-5 justify-center items-center rounded-lg">
-          <UpLoadWiget
-            onUploadComplete={(url: string) => {
-              setImageUrl(url);
-              setIsDisabled(true);
-            }}
-            isDisabledProp={isDisabled}
-          ></UpLoadWiget>
-          {imageUrl ? (
-            <div className="relative">
-              <img
-                src={imageUrl}
-                alt="img"
-                className="w-full h-32 object-cover rounded-lg ring-1"
-              />
-              <div
-                onClick={() => handelCancelImg()}
-                className="absolute -top-1 -right-1 rounded-full w-5 h-5 bg-blue-600 inline-flex items-center justify-center text-white cursor-pointer"
-              >
-                x
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Imagen del Vehículo</h2>
+              <Separator />
+              <div className="flex flex-col items-center gap-4">
+                <UpLoadWidget
+                  onUploadComplete={(url: string) => {
+                    setImageUrl(url);
+                    setIsUploadDisabled(true);
+                  }}
+                  isDisabledProp={isUploadDisabled}
+                />
+                {imageUrl && (
+                  <div className="relative">
+                    <img
+                      src={imageUrl}
+                      alt="Vehículo"
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute -top-2 -right-2"
+                      onClick={handleCancelImg}
+                    >
+                      X
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
-          ) : (
-            ""
-          )}
-        </div>
-
-        <div className="flex flex-col gap-2 justify-center items-center">
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button type="button" variant="outline" onClick={() => reset()}>
+            Cancelar
+          </Button>
           <Button
             type="submit"
-            className="w-full bg-transparent text-black border border-blue-500 hover:bg-blue-300 transition-colors"
+            disabled={isSubmitting}
+            onClick={handleSubmit(onSubmit)}
           >
-            Submit
+            {isSubmitting ? "Enviando..." : "Enviar"}
           </Button>
-          <Button
-            type="reset"
-            className="w-full bg-transparent text-black border border-red-500 hover:bg-red-300 transition-colors"
-          >
-            Cancel
-          </Button>
-        </div>
-      </form>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

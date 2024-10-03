@@ -11,7 +11,7 @@ interface propsCallback {
   isDisabledProp: boolean;
 }
 
-function UpLoadWiget({onUploadComplete, isDisabledProp}: propsCallback) {
+function UpLoadWidget({onUploadComplete, isDisabledProp}: propsCallback) {
   return (
     <>
       <CldUploadWidget
@@ -45,4 +45,4 @@ function UpLoadWiget({onUploadComplete, isDisabledProp}: propsCallback) {
   );
 }
 
-export default UpLoadWiget;
+export default UpLoadWidget;

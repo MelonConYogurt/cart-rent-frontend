@@ -14,9 +14,15 @@ function ListCars() {
     async function fetchData() {
       try {
         const response = await GetAllCarsInfo();
+        console.log(response);
         if (response) {
+          console.log(response);
           setData(response);
           toast.success("Showing all cars available");
+        } else {
+          const error = await response.json();
+          const result = error.data;
+          toast.error(`Error: ${result}`);
         }
       } catch (error) {
         toast.error(`Error: ${error}`);

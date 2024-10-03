@@ -309,7 +309,7 @@ export default function ImprovedCarForm() {
                         <SelectContent>
                           <SelectItem value="sedan">Sedán</SelectItem>
                           <SelectItem value="suv">SUV</SelectItem>
-                          <SelectItem value="hatchback">Hatchback</SelectItem>
+                          <SelectItem value="hatchvback">Hatchback</SelectItem>
                           <SelectItem value="coupe">Coupé</SelectItem>
                           <SelectItem value="truck">Camioneta</SelectItem>
                         </SelectContent>

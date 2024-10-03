@@ -38,7 +38,7 @@ export const carSchema = z.object({
   ),
 
   driveType: z.enum(["awd", "fwd", "rwd"]),
-  bodyType: z.enum(["sedan", "suv", "hatchback", "coupe", "truck"]),
+  bodyType: z.enum(["sedan", "suv", "hatchvback", "coupe", "truck"]),
 
   // Horsepower preprocessing: converts string to number
   horsePower: z.preprocess(

@@ -24,11 +24,11 @@ export const carSchema = z.object({
     z.number().int().positive("Mileage must be a positive number")
   ),
 
-  fuel_type: z.enum(["electric", "diesel", "gas", "gasoline", "hybrid"]),
-  transmission_type: z.enum(["automatic", "manual", "cvt"]),
+  fuelType: z.enum(["electric", "diesel", "gas", "gasoline", "hybrid"]),
+  transmissionType: z.enum(["automatic", "manual", "cvt"]),
 
   // Doors preprocessing: converts string to number
-  number_of_doors: z.preprocess(
+  numberOfDoors: z.preprocess(
     (val) => parseInt(val as string, 10),
     z
       .number()
@@ -37,11 +37,11 @@ export const carSchema = z.object({
       .max(5, "No more than 5 doors allowed")
   ),
 
-  drive_type: z.enum(["awd", "fwd", "rwd"]),
-  body_type: z.enum(["sedan", "suv", "hatchback", "coupe", "truck"]),
+  driveType: z.enum(["awd", "fwd", "rwd"]),
+  bodyType: z.enum(["sedan", "suv", "hatchback", "coupe", "truck"]),
 
   // Horsepower preprocessing: converts string to number
-  horse_power: z.preprocess(
+  horsePower: z.preprocess(
     (val) => parseInt(val as string, 10),
     z
       .number()

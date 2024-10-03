@@ -11,22 +11,9 @@ import {carSchema} from "@/validations/addCarSchema";
 import {Toaster, toast} from "sonner";
 import UpLoadWiget from "@/components/UpLoadWiget";
 import SendCarData from "@/utils/sendCarData";
+import {z} from "zod";
 
-type Inputs = {
-  brand: string;
-  year: number;
-  vin: string;
-  color: string;
-  mileage: number;
-  fuel_type: string;
-  transmission_type: string;
-  number_of_doors: number;
-  drive_type: string;
-  body_type: string;
-  horse_power: number;
-  torque: number;
-  model: string;
-};
+type Inputs = z.infer<typeof carSchema>;
 
 export default function FormCart() {
   const {
@@ -40,24 +27,27 @@ export default function FormCart() {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
-  async function SendFormData(data: Inputs) {
-    const fechtData = await SendCarData(data);
-    if (fechtData) {
-      toast.success("Data send succesfully");
-    } else {
-      toast.warning("Data send fail");
-    }
-  }
-
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    if (imageUrl !== "") {
-      const UpdatedData = {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    console.log("Form submitted", data);
+    if (imageUrl) {
+      const updatedData = {
         ...data,
-        media_url: imageUrl,
+        mediaUrl: imageUrl,
       };
-      SendFormData(UpdatedData);
-      reset();
-      setImageUrl("");
+      try {
+        const fetchData = await SendCarData(updatedData);
+        if (fetchData) {
+          toast.success("Data sent successfully");
+          reset();
+          setImageUrl("");
+          setIsDisabled(false);
+        } else {
+          toast.warning("Data send failed");
+        }
+      } catch (error) {
+        console.error("Error sending data:", error);
+        toast.error("An error occurred while sending data");
+      }
     } else {
       toast.warning("No image found, please upload one");
     }
@@ -78,7 +68,7 @@ export default function FormCart() {
         <div className="space-y-10">
           <div className="text-center">
             <h1 className="text-2xl font-bold">Add New Car</h1>
-            <div className="w-full h-1 bg-gradient-to-r from-blue-300 to-blue-600 mt-2 animate-pulse" />
+            <div className="w-full h-1 bg-gradient-to-r from-blue-300 to-blue-600 mt-2 animate-pulse rounded-lg" />
           </div>
 
           <div className="space-y-4">
@@ -178,15 +168,15 @@ export default function FormCart() {
         <div className="space-y-10">
           <div className="text-center">
             <h2 className="text-2xl font-bold">Details</h2>
-            <div className="w-full h-1 bg-gradient-to-r from-blue-300 to-blue-600 mt-2 animate-pulse" />
+            <div className="w-full h-1 bg-gradient-to-r from-blue-300 to-blue-600 mt-2 animate-pulse rounded-lg" />
           </div>
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="fuel_type">Fuel Type</Label>
+              <Label htmlFor="fuelType">Fuel Type</Label>
               <select
-                id="fuel_type"
-                {...register("fuel_type")}
+                id="fuelType"
+                {...register("fuelType")}
                 className="w-full p-2 border rounded bg-transparent"
               >
                 <option value="">Choose fuel type</option>
@@ -196,13 +186,18 @@ export default function FormCart() {
                 <option value="gasoline">Gasoline</option>
                 <option value="hybrid">Hybrid</option>
               </select>
+              {errors.fuelType?.message && (
+                <p className="text-red-500 text-sm">
+                  {errors.fuelType.message?.toString()}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="transmission_type">Transmission</Label>
+              <Label htmlFor="transmissionType">Transmission</Label>
               <select
-                id="transmission_type"
-                {...register("transmission_type")}
+                id="transmissionType"
+                {...register("transmissionType")}
                 className="w-full p-2 border rounded bg-transparent"
               >
                 <option value="">Choose transmission type</option>
@@ -210,28 +205,33 @@ export default function FormCart() {
                 <option value="manual">Manual</option>
                 <option value="cvt">CVT</option>
               </select>
+              {errors.transmissionType?.message && (
+                <p className="text-red-500 text-sm">
+                  {errors.transmissionType.message?.toString()}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="doors">Number of Doors</Label>
               <Input
                 type="number"
-                id="number_of_doors"
+                id="numberOfDoors"
                 placeholder="Ex. 2, 4"
-                {...register("number_of_doors")}
+                {...register("numberOfDoors")}
               />
-              {errors.number_of_doors && (
+              {errors.numberOfDoors && (
                 <p className="text-red-500 text-sm">
-                  {errors.number_of_doors.message?.toString()}
+                  {errors.numberOfDoors.message?.toString()}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="drive_type">Drive Type</Label>
+              <Label htmlFor="driveType">Drive Type</Label>
               <select
-                id="drive_type"
-                {...register("drive_type")}
+                id="driveType"
+                {...register("driveType")}
                 className="w-full p-2 border rounded bg-transparent"
               >
                 <option value="">Choose drive type</option>
@@ -239,13 +239,18 @@ export default function FormCart() {
                 <option value="fwd">FWD</option>
                 <option value="rwd">RWD</option>
               </select>
+              {errors.driveType?.message && (
+                <p className="text-red-500 text-sm">
+                  {errors.driveType.message?.toString()}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="body_type">Body Style</Label>
+              <Label htmlFor="bodyType">Body Style</Label>
               <select
-                id="body_type"
-                {...register("body_type")}
+                id="bodyType"
+                {...register("bodyType")}
                 className="w-full p-2 border rounded bg-transparent"
               >
                 <option value="">Choose body style</option>
@@ -255,19 +260,24 @@ export default function FormCart() {
                 <option value="coupe">Coupe</option>
                 <option value="truck">Truck</option>
               </select>
+              {errors.bodyType?.message && (
+                <p className="text-red-500 text-sm">
+                  {errors.bodyType.message?.toString()}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="horse_power">Horsepower</Label>
+              <Label htmlFor="horsePower">Horsepower</Label>
               <Input
                 type="number"
-                id="horse_power"
+                id="horsePower"
                 placeholder="Ex. 150"
-                {...register("horse_power")}
+                {...register("horsePower")}
               />
-              {errors.horse_power && (
+              {errors.horsePower && (
                 <p className="text-red-500 text-sm">
-                  {errors.horse_power.message?.toString()}
+                  {errors.horsePower.message?.toString()}
                 </p>
               )}
             </div>

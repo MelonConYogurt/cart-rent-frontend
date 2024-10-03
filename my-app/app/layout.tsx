@@ -8,8 +8,9 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import {checkRole} from "@/utils/roles";
-
 import localFont from "next/font/local";
+import Link from "next/link";
+import {Menu, X} from "lucide-react";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -17,6 +18,7 @@ const geistSans = localFont({
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -39,43 +41,127 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <nav className="flex justify-end  bg-gray-900 text-slate-50 h-12 hover:text-white">
-            <ul className="flex gap-5 justify-center items-center mx-10">
-              <li>
-                <a href="/">Home</a>
-              </li>
-              <li>
-                <a href="/about">About</a>
-              </li>
-              <li>
-                <a href="/cars">Cars</a>
-              </li>
-              <li>
-                <a href="/pricing">Pricing</a>
-              </li>
-              {!checkRole("admin") ? (
-                ""
-              ) : (
-                <li>
-                  <a href="/form" className="hover:underline">
+          <nav className="bg-gray-900 text-slate-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between h-16">
+                <div className="flex items-center">
+                  <Link href="/" className="flex-shrink-0">
+                    <img
+                      className="h-8 w-auto"
+                      src="/placeholder.svg?height=32&width=32"
+                      alt="Logo"
+                    />
+                  </Link>
+                </div>
+                <div className="hidden md:block">
+                  <div className="ml-10 flex items-baseline space-x-4">
+                    <Link
+                      href="/"
+                      className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Home
+                    </Link>
+                    <Link
+                      href="/about"
+                      className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      About
+                    </Link>
+                    <Link
+                      href="/cars"
+                      className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Cars
+                    </Link>
+                    <Link
+                      href="/pricing"
+                      className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Pricing
+                    </Link>
+                    {checkRole("admin") && (
+                      <Link
+                        href="/form"
+                        className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                      >
+                        Add car
+                      </Link>
+                    )}
+                  </div>
+                </div>
+                <div className="hidden md:block">
+                  <SignedOut>
+                    <SignInButton mode="modal">
+                      <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        Sign In
+                      </button>
+                    </SignInButton>
+                  </SignedOut>
+                  <SignedIn>
+                    <UserButton afterSignOutUrl="/" />
+                  </SignedIn>
+                </div>
+                <div className="md:hidden flex items-center">
+                  <button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                    <span className="sr-only">Open main menu</span>
+                    <Menu className="block h-6 w-6" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="md:hidden">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <Link
+                  href="/"
+                  className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium"
+                >
+                  Home
+                </Link>
+                <Link
+                  href="/about"
+                  className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium"
+                >
+                  About
+                </Link>
+                <Link
+                  href="/cars"
+                  className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium"
+                >
+                  Cars
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium"
+                >
+                  Pricing
+                </Link>
+                {checkRole("admin") && (
+                  <Link
+                    href="/form"
+                    className="block hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium"
+                  >
                     Add car
-                  </a>
-                </li>
-              )}
-              <li>
-                <SignedOut>
-                  <SignInButton />
-                </SignedOut>
-              </li>
-              <li>
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
-              </li>
-            </ul>
+                  </Link>
+                )}
+              </div>
+              <div className="pt-4 pb-3 border-t border-gray-700">
+                <div className="flex items-center px-5">
+                  <SignedOut>
+                    <SignInButton mode="modal">
+                      <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        Sign In
+                      </button>
+                    </SignInButton>
+                  </SignedOut>
+                  <SignedIn>
+                    <UserButton afterSignOutUrl="/" />
+                  </SignedIn>
+                </div>
+              </div>
+            </div>
           </nav>
 
-          {children}
+          <main>{children}</main>
 
           <footer className="bg-gray-900 text-white py-8">
             <div className="container mx-auto px-4">

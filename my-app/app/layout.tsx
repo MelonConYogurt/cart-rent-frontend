@@ -47,36 +47,32 @@ export default function RootLayout({
               <div className="flex items-center justify-between h-16">
                 <div className="flex items-center">
                   <Link href="/" className="flex-shrink-0">
-                    <img
-                      className="h-8 w-auto"
-                      src="/placeholder.svg?height=32&width=32"
-                      alt="Logo"
-                    />
+                    <div className="rounded-full bg-white h-8 w-8"></div>
                   </Link>
                 </div>
                 <div className="hidden md:block">
-                  <div className="ml-10 flex items-baseline space-x-4">
+                  <div className="ml-10 flex items-baseline space-x-4 ">
                     <Link
                       href="/"
-                      className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                      className="hover:bg-gray-700 px-3 py-2 rounded-md "
                     >
                       Home
                     </Link>
                     <Link
                       href="/about"
-                      className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                      className="hover:bg-gray-700 px-3 py-2 rounded-md"
                     >
                       About
                     </Link>
                     <Link
                       href="/cars"
-                      className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                      className="hover:bg-gray-700 px-3 py-2 rounded-md "
                     >
                       Cars
                     </Link>
                     <Link
                       href="/pricing"
-                      className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                      className="hover:bg-gray-700 px-3 py-2 rounded-md "
                     >
                       Pricing
                     </Link>

@@ -7,6 +7,7 @@ export interface Data {
 }
 
 export interface Datum {
+  id: number;
   brand: string;
   model: string;
   year: number;
@@ -23,7 +24,7 @@ export interface Datum {
   bodyType: string;
   status?: boolean;
   price: number;
-  avaible?: boolean;
+  available?: boolean;
   rent_days?: number;
   last_service?: string;
 }

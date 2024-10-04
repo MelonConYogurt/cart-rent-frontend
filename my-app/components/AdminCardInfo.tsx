@@ -15,17 +15,27 @@ import {
 } from "lucide-react";
 
 import {Datum} from "@/types/tsTypes";
+import {Button} from "./ui/button";
+import Link from "next/link";
 
 export function AdminCarCard({info}: {info: Datum}) {
+  function DeletePost(post: Datum) {
+    console.log("Delete post:", post);
+  }
+
+  function PublishPost(post: Datum) {
+    console.log("Post published:", post);
+  }
+
   return (
-    <Card className="w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg">
+    <Card className="w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg relative">
       <CardHeader className="bg-gray-100">
         <CardTitle className="text-2xl font-bold flex justify-between items-center">
           <span>
             {info.brand} {info.model}
           </span>
         </CardTitle>
-        {info.avaible === true ? (
+        {info.available === true ? (
           <div className="bg-blue-300 rounded-sm p-2">Available</div>
         ) : (
           <div className="bg-red-300 rounded-sm p-2">Unavailable</div>
@@ -124,6 +134,27 @@ export function AdminCarCard({info}: {info: Datum}) {
           className="w-full h-full object-cover rounded-lg"
         />
       </div>
+      <div className="flex justify-end mx-6 gap-2">
+        <Link legacyBehavior href={`/manage/${info.id}`}>
+          <Button variant={"outline"} className="">
+            Edit
+          </Button>
+        </Link>
+        <Button
+          variant={"outline"}
+          className=""
+          onClick={() => PublishPost(info)}
+        >
+          Publish
+        </Button>
+      </div>
+      <Button
+        className="absolute top-2 right-2 m-2 hover:bg-red-400 border-gray-600 transition-colors"
+        variant={"outline"}
+        onClick={() => DeletePost(info)}
+      >
+        Delete
+      </Button>
     </Card>
   );
 }

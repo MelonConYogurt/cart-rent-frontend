@@ -33,18 +33,23 @@ function ListCars() {
 
   return (
     <div className="flex felx-row">
-      <div className="h-full w-96 flex flex-col justify-center items-center">
-        <h2 className="text-xl">Filtros</h2>
-      </div>
       <Toaster richColors />
       {data && data.data.length > 0 ? (
-        <MultipleCarInfo data={data.data} />
+        <section className="h-screen m-5">
+          <div className="flex flex-wrap gap-5 mx-5 my-10">
+            <MultipleCarInfo data={data.data} />
+          </div>
+        </section>
       ) : (
         <section className="h-screen flex flex-wrap gap-5 mx-5 my-10">
           {[...Array(6)].map((_, index) => (
             <div key={index} className="space-y-3">
-              <Skeleton className="h-[225px] w-[450px] rounded-xl animate-pulse" />
+              <Skeleton className="h-[620px] w-[450px] rounded-xl animate-pulse" />
               <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
                 <Skeleton className="h-4 w-[250px]" />
                 <Skeleton className="h-4 w-[200px]" />
                 <Skeleton className="h-4 w-[250px]" />

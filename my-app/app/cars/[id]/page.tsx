@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import {useEffect, useState} from "react";
-import Image from "next/image";
 import {Heart, Calendar, Info} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/tooltip";
 import {Datum} from "@/types/tsTypes";
 import {Toaster, toast} from "sonner";
+import GetAllCarsInfoFiltered from "@/utils/getAllCarsInfoFitered";
 
 export default function CarRentalPage({params}: {params: {id: number}}) {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -34,9 +35,10 @@ export default function CarRentalPage({params}: {params: {id: number}}) {
 
   async function fetchData(id: number) {
     try {
-      const response = await fetch(`/api/cars/${id}`);
-      const data = await response.json();
-      setCar(data);
+      const filter = `(filters: {carId: ${id}})`;
+      const response = await GetAllCarsInfoFiltered(filter);
+      const data = response.getAllCarsInfo;
+      setCar(data[0]);
     } catch (error) {
       console.log(error);
       toast.error(`Error: ${error}`);
@@ -92,11 +94,9 @@ export default function CarRentalPage({params}: {params: {id: number}}) {
           <CardContent>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <Image
+                <img
                   src={car.mediaUrl}
                   alt={`${car.brand} ${car.model}`}
-                  width={600}
-                  height={400}
                   className="rounded-lg object-cover w-full"
                 />
               </div>
@@ -161,14 +161,17 @@ export default function CarRentalPage({params}: {params: {id: number}}) {
             <div className="flex items-center">
               <Info className="mr-2 text-blue-500" />
               <span className="text-sm text-gray-500">
-                Last serviced: {car.last_service}
+                Last serviced: {car.lastService}
               </span>
             </div>
             <Button>Rent Now</Button>
           </CardFooter>
         </Card>
       ) : (
-        <div className="h-screen w-full flex justify-center items-center text-2xl">
+        <div
+          className="h-screen w-full flex justify-center items-center text-2xl"
+          onClick={() => console.log(car)}
+        >
           We are having problems, please reload the page 😕
         </div>
       )}

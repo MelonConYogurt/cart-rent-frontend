@@ -5,33 +5,7 @@ import {Card, CardContent} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Fuel, Gauge, Power, Repeat, DoorOpen} from "lucide-react";
 import Link from "next/link";
-
-export interface Data {
-  data: Datum[];
-}
-
-export interface Datum {
-  id: number;
-  brand: string;
-  model: string;
-  year: number;
-  vin: string;
-  color: string;
-  mileage: number;
-  numberOfDoors: number;
-  horsePower: number;
-  torque: number;
-  mediaUrl: string;
-  fuelType: string;
-  transmissionType: string;
-  driveType: string;
-  bodyType: string;
-  status?: boolean;
-  price: number;
-  avaible?: boolean;
-  rent_days?: number;
-  last_service?: string;
-}
+import {Datum} from "@/types/tsTypes";
 
 export function SingleCardInfo({info}: {info: Datum}) {
   return (
@@ -118,10 +92,10 @@ function InfoItem({
   );
 }
 
-export function MultipleCarInfo({data}: Data) {
+export function MultipleCarInfo({data}: {data: Datum[]}) {
   return (
     <>
-      {data.map((car) => (
+      {data.map((car: Datum) => (
         <SingleCardInfo key={car.vin} info={car} />
       ))}
     </>

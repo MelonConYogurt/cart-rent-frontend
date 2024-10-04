@@ -1,7 +1,7 @@
-async function GetAllCarsInfo() {
+async function GetAllCarsInfoFiltered(filter: string) {
   try {
     const response = await fetch(
-      "http://127.0.0.1:8000/graphql?query={ getAllCarsInfo { id brand model year vin color mileage numberOfDoors horsePower torque mediaUrl fuelType transmissionType driveType bodyType status available price rentDays lastService } }",
+      `http://127.0.0.1:8000/graphql?query={ getAllCarsInfo${filter}{ id brand model year vin color mileage numberOfDoors horsePower torque mediaUrl fuelType transmissionType driveType bodyType status available price rentDays lastService } }`,
       {
         method: "GET",
         headers: {
@@ -22,4 +22,4 @@ async function GetAllCarsInfo() {
   }
 }
 
-export default GetAllCarsInfo;
+export default GetAllCarsInfoFiltered;

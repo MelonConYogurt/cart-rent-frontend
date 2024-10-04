@@ -119,11 +119,11 @@ export function AdminCarCard({info}: {info: Datum}) {
             value={info.rent_days.toString()}
           />
         )}
-        {info.last_service && (
+        {info.lastService && (
           <InfoItem
             icon={<Wrench className="w-5 h-5" />}
             label="Last Service"
-            value={info.last_service}
+            value={info.lastService}
           />
         )}
       </CardContent>

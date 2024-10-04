@@ -3,7 +3,7 @@ export interface Main {
 }
 
 export interface Data {
-  data: Datum[];
+  getAllCarsInfo: Datum[];
 }
 
 export interface Datum {
@@ -26,5 +26,12 @@ export interface Datum {
   price: number;
   available?: boolean;
   rent_days?: number;
-  last_service?: string;
+  lastService?: string;
+}
+
+export interface Filters {
+  priceMin: number | null;
+  priceMax: number | null;
+  brand: string | null;
+  carId: number | null;
 }

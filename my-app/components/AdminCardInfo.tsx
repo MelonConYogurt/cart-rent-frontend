@@ -134,7 +134,7 @@ export function AdminCarCard({info}: {info: Datum}) {
           className="w-full h-full object-cover rounded-lg"
         />
       </div>
-      <div className="flex justify-end mx-6 gap-2">
+      <div className="flex justify-end mx-6 gap-2 my-5">
         <Link legacyBehavior href={`/manage/${info.id}`}>
           <Button variant={"outline"} className="">
             Edit

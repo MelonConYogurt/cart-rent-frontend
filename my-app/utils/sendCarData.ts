@@ -13,21 +13,7 @@ async function SendCarDataGraphQL(data: Datum) {
         query: `
           mutation {
             addNewCarInfo(carModelInput: {
-              brand: "${data.brand}",
-              model: "${data.model}",
-              year: ${data.year},
-              vin: "${data.vin}",
-              color: "${data.color}",
-              mileage: ${data.mileage},
-              numberOfDoors: ${data.numberOfDoors},
-              horsePower: ${data.horsePower},
-              torque: ${data.torque},
-              mediaUrl: "${data.mediaUrl}",
-              fuelType: "${data.fuelType}",
-              transmissionType: "${data.transmissionType}",
-              driveType: "${data.driveType}",
-              bodyType: "${data.bodyType}",
-              price: ${data.price}
+            ${data}
             }) {
               vin
             }

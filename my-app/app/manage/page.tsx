@@ -35,7 +35,7 @@ function Manage() {
     <main className="m-5 flex felx-row">
       <Toaster richColors />
       {data && data.data.length > 0 ? (
-        <section className="h-screen m-5 flex flex-wrap gap-5 mx-5 my-10">
+        <section className="m-5 flex flex-wrap gap-5 mx-5 my-10">
           <AdminCarList data={data.data} />
         </section>
       ) : (

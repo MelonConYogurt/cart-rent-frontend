@@ -35,7 +35,13 @@ function ListCars() {
     <div className="flex felx-row">
       <Toaster richColors />
       {data && data.getAllCarsInfo.length > 0 ? (
-        <section className="m-5">
+        <section className="m-5 grid grid-cols-[200px_minmax(900px,_1fr)] ">
+          <div className="">
+            <div>
+              <h1>Filtros</h1>
+            </div>
+            <div></div>
+          </div>
           <div className="flex flex-wrap gap-5 mx-5 my-10">
             <MultipleCarInfo data={data.getAllCarsInfo} />
           </div>

@@ -35,3 +35,7 @@ export interface Filters {
   brand: string | null;
   carId: number | null;
 }
+
+export interface FilterData {
+  name: string;
+}

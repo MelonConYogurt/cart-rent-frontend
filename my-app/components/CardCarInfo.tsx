@@ -10,7 +10,7 @@ import {Datum} from "@/types/tsTypes";
 export function SingleCardInfo({info}: {info: Datum}) {
   return (
     <Link legacyBehavior href={`/cars/${info.id}`}>
-      <Card className="w-full max-w-md mx-auto overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer">
+      <Card className="w-full max-w-md mx-auto overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl cursor-pointer">
         <div className="relative h-64 w-full overflow-hidden">
           <img
             src={info.mediaUrl}

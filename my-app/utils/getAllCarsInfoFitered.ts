@@ -1,8 +1,8 @@
 async function GetAllCarsInfoFiltered(filter: string) {
   try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/graphql?query={
-        getAllCarsInfo(filters: ${filter}) {
+    const query = `
+      query {
+        getAllCarsInfo(filters: {${filter}}) {
           id
           brand
           model
@@ -24,14 +24,22 @@ async function GetAllCarsInfoFiltered(filter: string) {
           rentDays
           lastService
         }
-      }`,
+      }
+    `;
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/graphql", // Cambiado a POST, sin parámetros en URL
       {
-        method: "GET",
+        method: "POST", // Cambiado de GET a POST
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          query, // El query ahora va en el cuerpo de la petición
+        }),
       }
     );
+
     if (!response.ok) {
       throw new Error(`Fail: ${response.status}`);
     } else {

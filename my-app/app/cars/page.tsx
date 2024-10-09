@@ -1,6 +1,7 @@
 "use client";
 
 import GetAllCarsInfo from "@/utils/getAllCarsInfo";
+import GetAllCarsInfoFiltered from "@/utils/getAllCarsInfoFitered";
 import GetAllColors from "@/utils/getAllColors";
 import GetAllBrands from "@/utils/getAllInfoBrands";
 import {useState, useEffect} from "react";
@@ -8,9 +9,6 @@ import {Data, FilterData} from "@/types/tsTypes";
 import {MultipleCarInfo} from "@/components/CardCarInfo";
 import {toast, Toaster} from "sonner";
 import {Skeleton} from "@/components/ui/skeleton";
-import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
-import {Checkbox} from "@/components/ui/checkbox";
 import {Filters} from "@/types/tsTypes";
 
 function ListCars() {
@@ -33,12 +31,63 @@ function ListCars() {
     priceMax: null,
   });
 
+  // function handleChangeFilters(name: string | number, value: string | number) {
+  //   console.log(name, value);
+  //   setFilters((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+
+  //   const filterMake = makeFilter(filters);
+  //   console.log(filterMake);
+  // }
+
   function handleChangeFilters(name: string | number, value: string | number) {
     console.log(name, value);
-    setFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFilters((prev) => {
+      const newFilters = {
+        ...prev,
+        [name]: value,
+      };
+
+      // Llama a makeFilter con el nuevo estado
+      const filterMake = makeFilter(newFilters);
+      console.log(filterMake);
+
+      return newFilters;
+    });
+  }
+
+  async function fetchDataFiltered(filters: string) {
+    try {
+      const responseFilteredCars = await GetAllCarsInfoFiltered(filters);
+      if (responseFilteredCars) {
+        setData(responseFilteredCars);
+        toast.success("Showing cars filtered");
+      }
+    } catch (error) {
+      toast.error(`Fail: ${error}`);
+    }
+  }
+
+  useEffect(() => {
+    const filterStr = makeFilter(filters);
+    fetchDataFiltered(filterStr);
+    console.log(filterStr);
+  }, [filters]);
+
+  function makeFilter(data: Filters) {
+    let filterStr = "";
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value != null && typeof value === "string") {
+        filterStr += `${key}: "${value}", `;
+      } else if (value != null && typeof value === "number") {
+        filterStr += `${key}: ${value}, `;
+      }
+    });
+
+    return filterStr;
   }
 
   useEffect(() => {
@@ -88,12 +137,13 @@ function ListCars() {
                       style={{backgroundColor: `${color.name}`}}
                       title={color.name}
                     ></div>
-                    <Checkbox
+                    <input
+                      type="checkbox"
                       value={color.name}
                       id={`${color.name}`}
                       onClick={() => handleChangeFilters("color", color.name)}
                     />
-                    <Label htmlFor={`${color.name}`}>{color.name}</Label>
+                    <label htmlFor={`${color.name}`}>{color.name}</label>
                   </div>
                 ))}
               </div>
@@ -103,11 +153,12 @@ function ListCars() {
               <div className="space-y-2">
                 {brands.map((brand, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <Checkbox
+                    <input
+                      type="checkbox"
                       id={`brand-${index}`}
                       onClick={() => handleChangeFilters("brand", brand.name)}
                     />
-                    <Label htmlFor={`brand-${index}`}>{brand.name}</Label>
+                    <label htmlFor={`brand-${index}`}>{brand.name}</label>
                   </div>
                 ))}
               </div>
@@ -117,13 +168,14 @@ function ListCars() {
               <div className="space-y-2">
                 {driveTypes.map((type, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <Checkbox
+                    <input
+                      type="checkbox"
                       id={`drive-${type}`}
                       onClick={() => handleChangeFilters("driveType", type)}
                     />
-                    <Label htmlFor={`drive-${type}`}>
+                    <label htmlFor={`drive-${type}`}>
                       {type.toUpperCase()}
-                    </Label>
+                    </label>
                   </div>
                 ))}
               </div>
@@ -133,15 +185,16 @@ function ListCars() {
               <div className="space-y-2">
                 {transmissionTypes.map((type, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <Checkbox
+                    <input
+                      type="checkbox"
                       id={`transmission-${type}`}
                       onClick={() =>
                         handleChangeFilters("transmissionType", type)
                       }
                     />
-                    <Label htmlFor={`transmission-${type}`}>
+                    <label htmlFor={`transmission-${type}`}>
                       {type.charAt(0).toUpperCase() + type.slice(1)}
-                    </Label>
+                    </label>
                   </div>
                 ))}
               </div>
@@ -151,13 +204,14 @@ function ListCars() {
               <div className="space-y-2">
                 {fuelTypes.map((type, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <Checkbox
+                    <input
+                      type="checkbox"
                       id={`fuel-${type}`}
                       onClick={() => handleChangeFilters("fuelType", type)}
                     />
-                    <Label htmlFor={`fuel-${type}`}>
+                    <label htmlFor={`fuel-${type}`}>
                       {type.charAt(0).toUpperCase() + type.slice(1)}
-                    </Label>
+                    </label>
                   </div>
                 ))}
               </div>
@@ -166,26 +220,32 @@ function ListCars() {
               <h2 className="text-lg font-semibold mb-2">Price Range</h2>
               <div className="flex space-x-2">
                 <div className="space-y-1">
-                  <Label htmlFor="min-price">Min</Label>
-                  <Input
+                  <label htmlFor="min-price">Min</label>
+                  <input
                     id="min-price"
                     type="number"
                     placeholder="Min Price"
                     value={filters.priceMin ?? ""}
                     onChange={(e) =>
-                      handleChangeFilters("priceMin", e.target.value)
+                      handleChangeFilters(
+                        "priceMin",
+                        parseFloat(e.target.value)
+                      )
                     }
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor="max-price">Max</Label>
-                  <Input
+                  <label htmlFor="max-price">Max</label>
+                  <input
                     id="max-price"
                     type="number"
                     placeholder="Max Price"
                     value={filters.priceMax ?? ""}
                     onChange={(e) =>
-                      handleChangeFilters("priceMax", e.target.value)
+                      handleChangeFilters(
+                        "priceMax",
+                        parseFloat(e.target.value)
+                      )
                     }
                   />
                 </div>
@@ -195,32 +255,39 @@ function ListCars() {
               <h2 className="text-lg font-semibold mb-2">Kilometers Range</h2>
               <div className="flex space-x-2">
                 <div className="space-y-1">
-                  <Label htmlFor="min-km">Min</Label>
-                  <Input
+                  <label htmlFor="min-km">Min</label>
+                  <input
                     id="min-km"
                     type="number"
                     placeholder="Min Km"
                     value={filters.mileageMin ?? ""}
                     onChange={(e) =>
-                      handleChangeFilters("mileageMin", e.target.value)
+                      handleChangeFilters(
+                        "mileageMin",
+                        parseInt(e.target.value, 10)
+                      )
                     }
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor="max-km">Max</Label>
-                  <Input
+                  <label htmlFor="max-km">Max</label>
+                  <input
                     id="max-km"
                     type="number"
                     placeholder="Max Km"
                     value={filters.mileageMax ?? ""}
                     onChange={(e) =>
-                      handleChangeFilters("mileageMax", e.target.value)
+                      handleChangeFilters(
+                        "mileageMax",
+                        parseInt(e.target.value, 10)
+                      )
                     }
                   />
                 </div>
               </div>
             </div>
           </div>
+
           <div className="flex flex-wrap gap-5 mx-5 my-10">
             <MultipleCarInfo data={data.getAllCarsInfo} />
           </div>

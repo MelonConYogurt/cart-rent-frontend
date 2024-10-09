@@ -11,15 +11,35 @@ import {Skeleton} from "@/components/ui/skeleton";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Checkbox} from "@/components/ui/checkbox";
+import {Filters} from "@/types/tsTypes";
 
 function ListCars() {
   const [data, setData] = useState<Data>();
   const [colors, setColors] = useState<FilterData[]>([]);
   const [brands, setBrands] = useState<FilterData[]>([]);
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [minKm, setMinKm] = useState("");
-  const [maxKm, setMaxKm] = useState("");
+  const driveTypes = ["rwd", "fwd", "awd"];
+  const transmissionTypes = ["manual", "automatic", "cvt"];
+  const fuelTypes = ["electric", "gas", "diesel", "gasoline"];
+
+  const [filters, setFilters] = useState<Filters>({
+    brand: null,
+    color: null,
+    fuelType: null,
+    driveType: null,
+    transmissionType: null,
+    mileageMin: null,
+    mileageMax: null,
+    priceMin: null,
+    priceMax: null,
+  });
+
+  function handleChangeFilters(name: string | number, value: string | number) {
+    console.log(name, value);
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -45,10 +65,6 @@ function ListCars() {
     fetchData();
   }, []);
 
-  const driveTypes = ["rwd", "fwd", "awd"];
-  const transmissionTypes = ["manual", "automatic", "cvt"];
-  const fuelTypes = ["electric", "gas", "diesel", "gasoline"];
-
   return (
     <div className="flex flex-row">
       <Toaster richColors />
@@ -60,14 +76,25 @@ function ListCars() {
             </div>
             <div>
               <h2 className="text-lg font-semibold mb-2">Colors</h2>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col gap-2">
                 {colors.map((color, index) => (
-                  <div
-                    key={index}
-                    className="rounded-full w-8 h-8 cursor-pointer"
-                    style={{backgroundColor: `${color.name}`}}
-                    title={color.name}
-                  ></div>
+                  <div key={index} className="flex gap-2 items-center">
+                    <div
+                      className={`rounded-full w-8 h-8 cursor-pointer  ring-black ${
+                        filters.color === color.name
+                          ? "ring-red-600 ring-4"
+                          : "ring-1"
+                      }`}
+                      style={{backgroundColor: `${color.name}`}}
+                      title={color.name}
+                    ></div>
+                    <Checkbox
+                      value={color.name}
+                      id={`${color.name}`}
+                      onClick={() => handleChangeFilters("color", color.name)}
+                    />
+                    <Label htmlFor={`${color.name}`}>{color.name}</Label>
+                  </div>
                 ))}
               </div>
             </div>
@@ -76,7 +103,10 @@ function ListCars() {
               <div className="space-y-2">
                 {brands.map((brand, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <Checkbox id={`brand-${index}`} />
+                    <Checkbox
+                      id={`brand-${index}`}
+                      onClick={() => handleChangeFilters("brand", brand.name)}
+                    />
                     <Label htmlFor={`brand-${index}`}>{brand.name}</Label>
                   </div>
                 ))}
@@ -87,7 +117,10 @@ function ListCars() {
               <div className="space-y-2">
                 {driveTypes.map((type, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <Checkbox id={`drive-${type}`} />
+                    <Checkbox
+                      id={`drive-${type}`}
+                      onClick={() => handleChangeFilters("driveType", type)}
+                    />
                     <Label htmlFor={`drive-${type}`}>
                       {type.toUpperCase()}
                     </Label>
@@ -100,7 +133,12 @@ function ListCars() {
               <div className="space-y-2">
                 {transmissionTypes.map((type, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <Checkbox id={`transmission-${type}`} />
+                    <Checkbox
+                      id={`transmission-${type}`}
+                      onClick={() =>
+                        handleChangeFilters("transmissionType", type)
+                      }
+                    />
                     <Label htmlFor={`transmission-${type}`}>
                       {type.charAt(0).toUpperCase() + type.slice(1)}
                     </Label>
@@ -113,7 +151,10 @@ function ListCars() {
               <div className="space-y-2">
                 {fuelTypes.map((type, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <Checkbox id={`fuel-${type}`} />
+                    <Checkbox
+                      id={`fuel-${type}`}
+                      onClick={() => handleChangeFilters("fuelType", type)}
+                    />
                     <Label htmlFor={`fuel-${type}`}>
                       {type.charAt(0).toUpperCase() + type.slice(1)}
                     </Label>
@@ -130,8 +171,10 @@ function ListCars() {
                     id="min-price"
                     type="number"
                     placeholder="Min Price"
-                    value={minPrice}
-                    onChange={(e) => setMinPrice(e.target.value)}
+                    value={filters.priceMin ?? ""}
+                    onChange={(e) =>
+                      handleChangeFilters("priceMin", e.target.value)
+                    }
                   />
                 </div>
                 <div className="space-y-1">
@@ -140,8 +183,10 @@ function ListCars() {
                     id="max-price"
                     type="number"
                     placeholder="Max Price"
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
+                    value={filters.priceMax ?? ""}
+                    onChange={(e) =>
+                      handleChangeFilters("priceMax", e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -155,8 +200,10 @@ function ListCars() {
                     id="min-km"
                     type="number"
                     placeholder="Min Km"
-                    value={minKm}
-                    onChange={(e) => setMinKm(e.target.value)}
+                    value={filters.mileageMin ?? ""}
+                    onChange={(e) =>
+                      handleChangeFilters("mileageMin", e.target.value)
+                    }
                   />
                 </div>
                 <div className="space-y-1">
@@ -165,8 +212,10 @@ function ListCars() {
                     id="max-km"
                     type="number"
                     placeholder="Max Km"
-                    value={maxKm}
-                    onChange={(e) => setMaxKm(e.target.value)}
+                    value={filters.mileageMax ?? ""}
+                    onChange={(e) =>
+                      handleChangeFilters("mileageMax", e.target.value)
+                    }
                   />
                 </div>
               </div>

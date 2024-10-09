@@ -30,10 +30,16 @@ export interface Datum {
 }
 
 export interface Filters {
-  priceMin: number | null;
-  priceMax: number | null;
-  brand: string | null;
-  carId: number | null;
+  carId?: number | null;
+  priceMin?: number | null;
+  priceMax?: number | null;
+  brand?: string | null;
+  color?: string | null;
+  fuelType?: string | null;
+  driveType?: string | null;
+  transmissionType?: string | null;
+  mileageMin?: number | null;
+  mileageMax?: number | null;
 }
 
 export interface FilterData {

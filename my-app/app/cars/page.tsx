@@ -126,7 +126,7 @@ export default function ListCars() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-background">
-      <Toaster richColors />
+      <Toaster richColors position="bottom-left" />
       <aside className="w-full md:w-80 p-6 border-r">
         <ScrollArea className="h-[calc(100vh-4rem)]">
           <div className="space-y-6">

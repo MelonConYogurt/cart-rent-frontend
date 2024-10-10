@@ -54,127 +54,131 @@ export default function CarRentalPage({params}: {params: {id: number}}) {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Toaster richColors />
-      {car ? (
-        <Card className="overflow-hidden">
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle className="text-3xl font-bold">
-                {car.brand} {car.model} ({car.year})
-              </CardTitle>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={toggleFavorite}
-                    >
-                      <Heart
-                        className={
-                          isFavorite
-                            ? "fill-red-500 text-red-500"
-                            : "text-gray-500"
-                        }
+    <section className="h-screen w-full">
+      <div className="container mx-auto px-4 py-8">
+        <Toaster richColors position="bottom-left" />
+        {car ? (
+          <Card className="overflow-hidden">
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="text-3xl font-bold">
+                  {car.brand} {car.model} ({car.year})
+                </CardTitle>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={toggleFavorite}
+                      >
+                        <Heart
+                          className={
+                            isFavorite
+                              ? "fill-red-500 text-red-500"
+                              : "text-gray-500"
+                          }
+                        />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        {isFavorite
+                          ? "Remove from favorites"
+                          : "Add to favorites"}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <img
+                    src={car.mediaUrl}
+                    alt={`${car.brand} ${car.model}`}
+                    className="rounded-lg object-cover w-full"
+                  />
+                </div>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Color</Label>
+                      <p>{car.color}</p>
+                    </div>
+                    <div>
+                      <Label>Mileage</Label>
+                      <p>{car.mileage} miles</p>
+                    </div>
+                    <div>
+                      <Label>Fuel Type</Label>
+                      <p>{car.fuelType}</p>
+                    </div>
+                    <div>
+                      <Label>Transmission</Label>
+                      <p>{car.transmissionType}</p>
+                    </div>
+                    <div>
+                      <Label>Drive Type</Label>
+                      <p>{car.driveType}</p>
+                    </div>
+                    <div>
+                      <Label>Body Type</Label>
+                      <p>{car.bodyType}</p>
+                    </div>
+                    <div>
+                      <Label>Horse Power</Label>
+                      <p>{car.horsePower} HP</p>
+                    </div>
+                    <div>
+                      <Label>Torque</Label>
+                      <p>{car.torque} lb-ft</p>
+                    </div>
+                  </div>
+                  <Separator />
+                  <div>
+                    <Label htmlFor="rent-days">Rental Period (Days)</Label>
+                    <div className="flex items-center mt-2">
+                      <Input
+                        id="rent-days"
+                        type="number"
+                        min="1"
+                        value={rentDays}
+                        onChange={handleRentDaysChange}
+                        className="w-20 mr-2"
                       />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>
-                      {isFavorite
-                        ? "Remove from favorites"
-                        : "Add to favorites"}
+                      <Calendar className="text-gray-500" />
+                    </div>
+                  </div>
+                  <div>
+                    <Label>Total Price</Label>
+                    <p className="text-2xl font-bold">
+                      ${car.price * rentDays}
                     </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <img
-                  src={car.mediaUrl}
-                  alt={`${car.brand} ${car.model}`}
-                  className="rounded-lg object-cover w-full"
-                />
-              </div>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Color</Label>
-                    <p>{car.color}</p>
                   </div>
-                  <div>
-                    <Label>Mileage</Label>
-                    <p>{car.mileage} miles</p>
-                  </div>
-                  <div>
-                    <Label>Fuel Type</Label>
-                    <p>{car.fuelType}</p>
-                  </div>
-                  <div>
-                    <Label>Transmission</Label>
-                    <p>{car.transmissionType}</p>
-                  </div>
-                  <div>
-                    <Label>Drive Type</Label>
-                    <p>{car.driveType}</p>
-                  </div>
-                  <div>
-                    <Label>Body Type</Label>
-                    <p>{car.bodyType}</p>
-                  </div>
-                  <div>
-                    <Label>Horse Power</Label>
-                    <p>{car.horsePower} HP</p>
-                  </div>
-                  <div>
-                    <Label>Torque</Label>
-                    <p>{car.torque} lb-ft</p>
-                  </div>
-                </div>
-                <Separator />
-                <div>
-                  <Label htmlFor="rent-days">Rental Period (Days)</Label>
-                  <div className="flex items-center mt-2">
-                    <Input
-                      id="rent-days"
-                      type="number"
-                      min="1"
-                      value={rentDays}
-                      onChange={handleRentDaysChange}
-                      className="w-20 mr-2"
-                    />
-                    <Calendar className="text-gray-500" />
-                  </div>
-                </div>
-                <div>
-                  <Label>Total Price</Label>
-                  <p className="text-2xl font-bold">${car.price * rentDays}</p>
                 </div>
               </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-between items-center">
-            <div className="flex items-center">
-              <Info className="mr-2 text-blue-500" />
-              <span className="text-sm text-gray-500">
-                Last serviced: {car.lastService}
-              </span>
-            </div>
-            <Button>Rent Now</Button>
-          </CardFooter>
-        </Card>
-      ) : (
-        <div
-          className="h-screen w-full flex justify-center items-center text-2xl"
-          onClick={() => console.log(car)}
-        >
-          We are having problems, please reload the page 😕
-        </div>
-      )}
-    </div>
+            </CardContent>
+            <CardFooter className="flex justify-between items-center">
+              <div className="flex items-center">
+                <Info className="mr-2 text-blue-500" />
+                <span className="text-sm text-gray-500">
+                  Last serviced: {car.lastService}
+                </span>
+              </div>
+              <Button>Rent Now</Button>
+            </CardFooter>
+          </Card>
+        ) : (
+          <div
+            className="h-screen w-full flex justify-center items-center text-2xl"
+            onClick={() => console.log(car)}
+          >
+            We are having problems, please reload the page 😕
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

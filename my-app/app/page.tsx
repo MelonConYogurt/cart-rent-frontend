@@ -1,8 +1,37 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @next/next/no-img-element */
+"use client";
+
 import {Button} from "@/components/ui/button";
 import {CarIcon, MapPinIcon, PhoneIcon, StarIcon} from "lucide-react";
+import {MultipleCarInfoLimited} from "@/components/LimitCardsInfo";
+import GetAllCarsInfo from "@/utils/getAllCarsInfo";
+import {Data} from "@/types/tsTypes";
+import {useState, useEffect} from "react";
+import {Skeleton} from "@/components/ui/skeleton";
+import {Card, CardContent} from "@/components/ui/card";
 
 export default function Home() {
+  const [data, setData] = useState<Data>();
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await GetAllCarsInfo();
+        if (response) {
+          console.log(response);
+          setData(response);
+        } else {
+          const error = await response.json();
+          console.log(error);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
     <div className="bg-gray-50">
       <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
@@ -36,31 +65,28 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-center mb-8">
             Vehículos destacados
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((car) => (
-              <div
-                key={car}
-                className="bg-white rounded-lg shadow-md overflow-hidden"
-              >
-                <img
-                  src={`/placeholder.svg?height=200&width=300`}
-                  alt={`Coche ${car}`}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">
-                    Modelo de Coche {car}
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Descripción breve del vehículo.
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold">$50/día</span>
-                    <Button variant="outline">Reservar</Button>
-                  </div>
-                </div>
+          <div className="flex flex-wrap">
+            {data && data.getAllCarsInfo.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <MultipleCarInfoLimited data={data.getAllCarsInfo} />
               </div>
-            ))}
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(3)].map((_, index) => (
+                  <Card key={index} className="overflow-hidden">
+                    <CardContent className="p-0">
+                      <Skeleton className="h-48 w-full" />
+                      <div className="p-4 space-y-2">
+                        <Skeleton className="h-4 w-2/3" />
+                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-4 w-1/2" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -147,7 +173,14 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-center mb-8">
             Nuestras marcas
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8"></div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-20">
+            <img src="/mazda.svg" alt="" />
+            <img src="/mercedes.svg" alt="" />
+            <img src="/toyota.svg" alt="" />
+            <img src="/renault.svg" alt="" />
+            <img src="/porsche.svg" alt="" />
+            <img src="/chevrolet.svg" alt="" />
+          </div>
         </div>
       </section>
 

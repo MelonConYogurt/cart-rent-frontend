@@ -7,7 +7,7 @@ export interface Data {
 }
 
 export interface Datum {
-  id: number;
+  id?: number;
   brand: string;
   model: string;
   year: number;

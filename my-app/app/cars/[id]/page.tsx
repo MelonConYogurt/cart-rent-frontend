@@ -35,7 +35,7 @@ export default function CarRentalPage({params}: {params: {id: number}}) {
 
   async function fetchData(id: number) {
     try {
-      const filter = `(filters: {carId: ${id}})`;
+      const filter = `carId: ${id}`;
       const response = await GetAllCarsInfoFiltered(filter);
       const data = response.getAllCarsInfo;
       setCar(data[0]);

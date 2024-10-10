@@ -1,94 +1,107 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import {Card, CardContent} from "@/components/ui/card";
-import {Badge} from "@/components/ui/badge";
-import {Fuel, Gauge, Power, Repeat, DoorOpen} from "lucide-react";
+import {useState} from "react";
 import Link from "next/link";
-import {Datum} from "@/types/tsTypes";
+import {Card, CardContent, CardFooter} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {Heart, Fuel, Gauge, Calendar, Car} from "lucide-react";
+import {Separator} from "./ui/separator";
 
-export function SingleCardInfo({info}: {info: Datum}) {
-  return (
-    <Link legacyBehavior href={`/cars/${info.id}`}>
-      <Card className="w-full max-w-md mx-auto overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl cursor-pointer">
-        <div className="relative h-64 w-full overflow-hidden">
-          <img
-            src={info.mediaUrl}
-            alt={`${info.brand} ${info.model}`}
-            className="object-cover  ransition-transform duration-300 hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-          <div className="absolute bottom-4 left-4 right-4 text-white">
-            <h2 className="text-2xl font-bold">
-              {info.brand} {info.model}
-            </h2>
-            <div className="flex justify-between items-center mt-2">
-              <Badge variant="secondary" className="text-sm">
-                {info.year}
-              </Badge>
-              <span
-                className="text-sm font-semibold"
-                style={{color: info.color}}
-              >
-                {info.color}
-              </span>
-            </div>
-          </div>
-        </div>
-        <CardContent className="p-6 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-          <div className="grid grid-cols-2 gap-4">
-            <InfoItem
-              icon={<Gauge className="w-5 h-5" />}
-              label="Mileage"
-              value={`${info.mileage.toLocaleString()} miles`}
-            />
-            <InfoItem
-              icon={<Power className="w-5 h-5" />}
-              label="Power"
-              value={`${info.horsePower} HP`}
-            />
-            <InfoItem
-              icon={<Fuel className="w-5 h-5" />}
-              label="Fuel"
-              value={info.fuelType}
-            />
-            <InfoItem
-              icon={<Repeat className="w-5 h-5" />}
-              label="Transmission"
-              value={info.transmissionType}
-            />
-            <InfoItem
-              icon={<DoorOpen className="w-5 h-5" />}
-              label="Doors"
-              value={info.numberOfDoors.toString()}
-            />
-          </div>
-          <div className="mt-4 pt-4 border-t border-gray-700">
-            <span className="text-xs text-gray-400">VIN: {info.vin}</span>
-          </div>
-        </CardContent>
-      </Card>
-    </Link>
-  );
+export interface Datum {
+  id: number;
+  brand: string;
+  model: string;
+  year: number;
+  vin: string;
+  color: string;
+  mileage: number;
+  numberOfDoors: number;
+  horsePower: number;
+  torque: number;
+  mediaUrl: string;
+  fuelType: string;
+  transmissionType: string;
+  driveType: string;
+  bodyType: string;
+  status?: boolean;
+  price: number;
+  available?: boolean;
+  rent_days?: number;
+  lastService?: string;
 }
 
-function InfoItem({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
+export function SingleCardInfo({info}: {info: Datum}) {
+  const [isFavorite, setIsFavorite] = useState(false);
+
   return (
-    <div className="flex items-center space-x-2">
-      <div className="p-2 bg-gray-700 rounded-full">{icon}</div>
-      <div>
-        <p className="text-xs text-gray-400">{label}</p>
-        <p className="font-semibold">{value}</p>
+    <Card className="w-full max-w-2xl mx-auto">
+      <div className="relative overflow-hidden flex justify-center items-center">
+        <img
+          src={info.mediaUrl || "/placeholder.svg?height=400&width=600"}
+          alt={`${info.brand} ${info.model}`}
+          className=" h-[650px] object-cover rounded-t-lg"
+        />
+        <Badge
+          variant={info.available ? "default" : "secondary"}
+          className="absolute top-2 right-2"
+        >
+          {info.available ? "Disponible" : "No disponible"}
+        </Badge>
       </div>
-    </div>
+      <CardContent className="p-6">
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">{`${info.brand} ${info.model}`}</h2>
+            <span className="text-xl font-semibold">{`$${info.price.toLocaleString()}`}</span>
+          </div>
+          <div>
+            <h1>Details</h1>
+            <Separator></Separator>
+            <br />
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="flex items-center">
+                <Calendar className="mr-2 h-5 w-5" />
+                <span>{info.year}</span>
+              </div>
+              <div className="flex items-center">
+                <Fuel className="mr-2 h-5 w-5" />
+                <span>{info.fuelType}</span>
+              </div>
+              <div className="flex items-center">
+                <Gauge className="mr-2 h-5 w-5" />
+                <span>{`${info.mileage} millas`}</span>
+              </div>
+              <div className="flex items-center">
+                <Car className="mr-2 h-5 w-5" />
+                <span>{info.bodyType}</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">{`${info.horsePower} HP | ${info.transmissionType} | ${info.driveType}`}</span>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-between p-6">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setIsFavorite(!isFavorite)}
+          aria-label={isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
+        >
+          <Heart
+            className={`h-4 w-4 ${
+              isFavorite ? "fill-current text-red-500" : ""
+            }`}
+          />
+        </Button>
+        <Link href={`/cars/${info.id}`} passHref>
+          <Button>Ver más detalles</Button>
+        </Link>
+      </CardFooter>
+    </Card>
   );
 }
 

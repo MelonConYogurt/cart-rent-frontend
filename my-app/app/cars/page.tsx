@@ -8,21 +8,26 @@ import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Card, CardContent} from "@/components/ui/card";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import GetAllCarsInfo from "@/utils/getAllCarsInfo";
+import {Data, FilterData, Filters} from "@/types/tsTypes";
+import {MultipleCarInfo} from "@/components/CardCarInfo";
 import GetAllCarsInfoFiltered from "@/utils/getAllCarsInfoFitered";
 import GetAllColors from "@/utils/getAllColors";
 import GetAllBrands from "@/utils/getAllInfoBrands";
-import {Data, FilterData, Filters} from "@/types/tsTypes";
-import {MultipleCarInfo} from "@/components/CardCarInfo";
+import {RotateCcw} from "lucide-react";
+import {Separator} from "@/components/ui/separator";
 
 export default function ListCars() {
   const [data, setData] = useState<Data>();
   const [colors, setColors] = useState<FilterData[]>([]);
   const [brands, setBrands] = useState<FilterData[]>([]);
+  const [pagination, setPagination] = useState({
+    maxPage: 0,
+    actualPage: 0,
+    itemsPerPage: 3,
+  });
   const driveTypes = ["rwd", "fwd", "awd"];
   const transmissionTypes = ["manual", "automatic", "cvt"];
   const fuelTypes = ["electric", "gas", "diesel", "gasoline"];
-
   const [filters, setFilters] = useState<Filters>({
     brand: null,
     color: null,
@@ -101,16 +106,42 @@ export default function ListCars() {
   }
 
   useEffect(() => {
+    const sizeData = data?.getAllCarsInfo.length ?? 0;
+    setPagination((prev) => ({
+      ...prev,
+      maxPage: Math.ceil(sizeData / prev.itemsPerPage),
+    }));
+  }, [data]);
+
+  function resetFilters() {
+    const reset = Object.fromEntries(
+      Object.entries(filters).map(([key]) => [key, null])
+    );
+    setFilters(reset as Filters);
+  }
+
+  function incrementPagination() {
+    setPagination((prev) => ({
+      ...prev,
+      actualPage: prev.actualPage + 1,
+    }));
+  }
+
+  function decrementPagination() {
+    setPagination((prev) => ({
+      ...prev,
+      actualPage: prev.actualPage - 1,
+    }));
+  }
+
+  useEffect(() => {
     async function fetchData() {
       try {
-        const response = await GetAllCarsInfo();
-        const responseColors = await GetAllColors();
-        const responseBrands = await GetAllBrands();
+        const filterStr = makeFilter(filters);
+        const response = await GetAllCarsInfoFiltered(filterStr);
         if (response) {
           console.log(response);
           setData(response);
-          setColors(responseColors);
-          setBrands(responseBrands);
           toast.success("Showing all available cars");
         } else {
           const error = await response.json();
@@ -122,6 +153,20 @@ export default function ListCars() {
       }
     }
     fetchData();
+  }, [filters]);
+
+  useEffect(() => {
+    async function fetchFilterData() {
+      try {
+        const responseColors = await GetAllColors();
+        const responseBrands = await GetAllBrands();
+        setColors(responseColors);
+        setBrands(responseBrands);
+      } catch (error) {
+        toast.error(`Error: ${error}`);
+      }
+    }
+    fetchFilterData();
   }, []);
 
   return (
@@ -130,30 +175,38 @@ export default function ListCars() {
       <aside className="w-full md:w-80 p-6 border-r">
         <ScrollArea className="h-[calc(100vh-4rem)]">
           <div className="space-y-6">
-            <h1 className="text-2xl font-bold">Filters</h1>
-            <div className="space-y-4">
+            <div className=" flex justify-center items-center gap-2">
+              <h1 className="text-2xl font-bold ">Filters</h1>
+              <button type="button" onClick={() => resetFilters()}>
+                <RotateCcw />
+              </button>
+            </div>
+            <Separator />
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-2xl font-bold mb-4">Filters</h1>
+              </div>
               <div>
                 <h2 className="text-lg font-semibold mb-2">Colors</h2>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="flex flex-col gap-2">
                   {colors.map((color, index) => (
-                    <div key={index} className="flex flex-col items-center">
+                    <div key={index} className="flex gap-2 items-center">
                       <div
-                        className={`rounded-full w-8 h-8 cursor-pointer ${
+                        className={`rounded-full w-8 h-8 cursor-pointer  ring-black ${
                           filters.color === color.name
-                            ? "ring-2 ring-primary"
-                            : "ring-1 ring-border"
+                            ? "ring-red-600 ring-4"
+                            : "ring-1"
                         }`}
                         style={{backgroundColor: `${color.name}`}}
                         title={color.name}
-                        onClick={() =>
-                          handleChangeFilters(
-                            "color",
-                            color.name,
-                            filters.color !== color.name
-                          )
-                        }
                       ></div>
-                      <span className="text-xs mt-1">{color.name}</span>
+                      <input
+                        type="checkbox"
+                        value={color.name}
+                        id={`${color.name}`}
+                        onClick={() => handleChangeFilters("color", color.name)}
+                      />
+                      <label htmlFor={`${color.name}`}>{color.name}</label>
                     </div>
                   ))}
                 </div>
@@ -163,13 +216,12 @@ export default function ListCars() {
                 <div className="space-y-2">
                   {brands.map((brand, index) => (
                     <div key={index} className="flex items-center space-x-2">
-                      <Checkbox
+                      <input
+                        type="checkbox"
                         id={`brand-${index}`}
-                        onCheckedChange={(checked) =>
-                          handleChangeFilters("brand", brand.name, checked)
-                        }
+                        onClick={() => handleChangeFilters("brand", brand.name)}
                       />
-                      <Label htmlFor={`brand-${index}`}>{brand.name}</Label>
+                      <label htmlFor={`brand-${index}`}>{brand.name}</label>
                     </div>
                   ))}
                 </div>
@@ -179,15 +231,14 @@ export default function ListCars() {
                 <div className="space-y-2">
                   {driveTypes.map((type, index) => (
                     <div key={index} className="flex items-center space-x-2">
-                      <Checkbox
+                      <input
+                        type="checkbox"
                         id={`drive-${type}`}
-                        onCheckedChange={(checked) =>
-                          handleChangeFilters("driveType", type, checked)
-                        }
+                        onClick={() => handleChangeFilters("driveType", type)}
                       />
-                      <Label htmlFor={`drive-${type}`}>
+                      <label htmlFor={`drive-${type}`}>
                         {type.toUpperCase()}
-                      </Label>
+                      </label>
                     </div>
                   ))}
                 </div>
@@ -199,15 +250,16 @@ export default function ListCars() {
                 <div className="space-y-2">
                   {transmissionTypes.map((type, index) => (
                     <div key={index} className="flex items-center space-x-2">
-                      <Checkbox
+                      <input
+                        type="checkbox"
                         id={`transmission-${type}`}
-                        onCheckedChange={(checked) =>
-                          handleChangeFilters("transmissionType", type, checked)
+                        onClick={() =>
+                          handleChangeFilters("transmissionType", type)
                         }
                       />
-                      <Label htmlFor={`transmission-${type}`}>
+                      <label htmlFor={`transmission-${type}`}>
                         {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </Label>
+                      </label>
                     </div>
                   ))}
                 </div>
@@ -217,25 +269,24 @@ export default function ListCars() {
                 <div className="space-y-2">
                   {fuelTypes.map((type, index) => (
                     <div key={index} className="flex items-center space-x-2">
-                      <Checkbox
+                      <input
+                        type="checkbox"
                         id={`fuel-${type}`}
-                        onCheckedChange={(checked) =>
-                          handleChangeFilters("fuelType", type, checked)
-                        }
+                        onClick={() => handleChangeFilters("fuelType", type)}
                       />
-                      <Label htmlFor={`fuel-${type}`}>
+                      <label htmlFor={`fuel-${type}`}>
                         {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </Label>
+                      </label>
                     </div>
                   ))}
                 </div>
               </div>
               <div>
                 <h2 className="text-lg font-semibold mb-2">Price Range</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="min-price">Min</Label>
-                    <Input
+                <div className="flex space-x-2">
+                  <div className="space-y-1">
+                    <label htmlFor="min-price">Min</label>
+                    <input
                       id="min-price"
                       type="number"
                       placeholder="Min Price"
@@ -248,9 +299,9 @@ export default function ListCars() {
                       }
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="max-price">Max</Label>
-                    <Input
+                  <div className="space-y-1">
+                    <label htmlFor="max-price">Max</label>
+                    <input
                       id="max-price"
                       type="number"
                       placeholder="Max Price"
@@ -267,10 +318,10 @@ export default function ListCars() {
               </div>
               <div>
                 <h2 className="text-lg font-semibold mb-2">Kilometers Range</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="min-km">Min</Label>
-                    <Input
+                <div className="flex space-x-2">
+                  <div className="space-y-1">
+                    <label htmlFor="min-km">Min</label>
+                    <input
                       id="min-km"
                       type="number"
                       placeholder="Min Km"
@@ -283,9 +334,9 @@ export default function ListCars() {
                       }
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="max-km">Max</Label>
-                    <Input
+                  <div className="space-y-1">
+                    <label htmlFor="max-km">Max</label>
+                    <input
                       id="max-km"
                       type="number"
                       placeholder="Max Km"
@@ -306,7 +357,7 @@ export default function ListCars() {
       </aside>
       <main className="flex-1 p-6">
         {data && data.getAllCarsInfo.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-wrap gap-10">
             <MultipleCarInfo data={data.getAllCarsInfo} />
           </div>
         ) : (
@@ -326,6 +377,31 @@ export default function ListCars() {
             ))}
           </div>
         )}
+        <div className="flex justify-center items-center my-20 gap-5">
+          <button
+            disabled={pagination.actualPage <= 0}
+            onClick={() => decrementPagination()}
+            className={`flex items-center justify-center px-4 h-10 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+              pagination.actualPage <= 0 ? "cursor-not-allowed" : ""
+            }`}
+          >
+            Previous
+          </button>
+          <span className="text-base font-medium text-gray-500">
+            {pagination.actualPage}/{pagination.maxPage}
+          </span>
+          <button
+            onClick={() => incrementPagination()}
+            disabled={pagination.actualPage >= pagination.maxPage}
+            className={`flex items-center justify-center px-4 h-10 ms-3 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+              pagination.actualPage >= pagination.maxPage
+                ? "cursor-not-allowed"
+                : ""
+            }`}
+          >
+            Next
+          </button>
+        </div>
       </main>
     </div>
   );

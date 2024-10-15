@@ -89,7 +89,9 @@ export default function ListCars() {
   }
 
   useEffect(() => {
+    console.log("Recibalo alla", filters);
     const filterStr = makeFilter(filters);
+    console.log("Guardelo ahi", filters);
     fetchDataFiltered(filterStr);
   }, [filters]);
 
@@ -192,7 +194,7 @@ export default function ListCars() {
                   {colors.map((color, index) => (
                     <div key={index} className="flex gap-2 items-center">
                       <div
-                        className={`rounded-full w-8 h-8 cursor-pointer  ring-black ${
+                        className={`ml-2 rounded-full w-8 h-8 cursor-pointer  ring-black ${
                           filters.color === color.name
                             ? "ring-red-600 ring-4"
                             : "ring-1"
@@ -219,7 +221,13 @@ export default function ListCars() {
                       <input
                         type="checkbox"
                         id={`brand-${index}`}
-                        onClick={() => handleChangeFilters("brand", brand.name)}
+                        onChange={(e) =>
+                          handleChangeFilters(
+                            "brand",
+                            brand.name,
+                            e.target.checked
+                          )
+                        }
                       />
                       <label htmlFor={`brand-${index}`}>{brand.name}</label>
                     </div>
@@ -234,7 +242,13 @@ export default function ListCars() {
                       <input
                         type="checkbox"
                         id={`drive-${type}`}
-                        onClick={() => handleChangeFilters("driveType", type)}
+                        onChange={(e) =>
+                          handleChangeFilters(
+                            "driveType",
+                            type,
+                            e.target.checked
+                          )
+                        }
                       />
                       <label htmlFor={`drive-${type}`}>
                         {type.toUpperCase()}
@@ -253,8 +267,12 @@ export default function ListCars() {
                       <input
                         type="checkbox"
                         id={`transmission-${type}`}
-                        onClick={() =>
-                          handleChangeFilters("transmissionType", type)
+                        onChange={(e) =>
+                          handleChangeFilters(
+                            "transmissionType",
+                            type,
+                            e.target.checked
+                          )
                         }
                       />
                       <label htmlFor={`transmission-${type}`}>
@@ -272,7 +290,13 @@ export default function ListCars() {
                       <input
                         type="checkbox"
                         id={`fuel-${type}`}
-                        onClick={() => handleChangeFilters("fuelType", type)}
+                        onChange={(e) =>
+                          handleChangeFilters(
+                            "fuelType",
+                            type,
+                            e.target.checked
+                          )
+                        }
                       />
                       <label htmlFor={`fuel-${type}`}>
                         {type.charAt(0).toUpperCase() + type.slice(1)}

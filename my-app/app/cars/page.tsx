@@ -175,209 +175,199 @@ export default function ListCars() {
     <div className="flex flex-col md:flex-row min-h-screen bg-background">
       <Toaster richColors position="bottom-left" />
       <aside className="w-full md:w-80 p-6 border-r">
-        <ScrollArea className="h-[calc(100vh-4rem)]">
+        <div className="space-y-6">
+          <div className=" flex justify-center items-center gap-2">
+            <h1 className="text-2xl font-bold ">Filters</h1>
+            <button type="button" onClick={() => resetFilters()}>
+              <RotateCcw />
+            </button>
+          </div>
+          <Separator />
           <div className="space-y-6">
-            <div className=" flex justify-center items-center gap-2">
-              <h1 className="text-2xl font-bold ">Filters</h1>
-              <button type="button" onClick={() => resetFilters()}>
-                <RotateCcw />
-              </button>
+            <div>
+              <h1 className="text-2xl font-bold mb-4">Filters</h1>
             </div>
-            <Separator />
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-2xl font-bold mb-4">Filters</h1>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold mb-2">Colors</h2>
-                <div className="flex flex-col gap-2">
-                  {colors.map((color, index) => (
-                    <div key={index} className="flex gap-2 items-center">
-                      <div
-                        className={`ml-2 rounded-full w-8 h-8 cursor-pointer  ring-black ${
-                          filters.color === color.name
-                            ? "ring-red-600 ring-4"
-                            : "ring-1"
-                        }`}
-                        style={{backgroundColor: `${color.name}`}}
-                        title={color.name}
-                      ></div>
-                      <input
-                        type="checkbox"
-                        value={color.name}
-                        id={`${color.name}`}
-                        onClick={() => handleChangeFilters("color", color.name)}
-                      />
-                      <label htmlFor={`${color.name}`}>{color.name}</label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold mb-2">Brands</h2>
-                <div className="space-y-2">
-                  {brands.map((brand, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id={`brand-${index}`}
-                        onChange={(e) =>
-                          handleChangeFilters(
-                            "brand",
-                            brand.name,
-                            e.target.checked
-                          )
-                        }
-                      />
-                      <label htmlFor={`brand-${index}`}>{brand.name}</label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold mb-2">Drive Type</h2>
-                <div className="space-y-2">
-                  {driveTypes.map((type, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id={`drive-${type}`}
-                        onChange={(e) =>
-                          handleChangeFilters(
-                            "driveType",
-                            type,
-                            e.target.checked
-                          )
-                        }
-                      />
-                      <label htmlFor={`drive-${type}`}>
-                        {type.toUpperCase()}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold mb-2">
-                  Transmission Type
-                </h2>
-                <div className="space-y-2">
-                  {transmissionTypes.map((type, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id={`transmission-${type}`}
-                        onChange={(e) =>
-                          handleChangeFilters(
-                            "transmissionType",
-                            type,
-                            e.target.checked
-                          )
-                        }
-                      />
-                      <label htmlFor={`transmission-${type}`}>
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold mb-2">Fuel Type</h2>
-                <div className="space-y-2">
-                  {fuelTypes.map((type, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id={`fuel-${type}`}
-                        onChange={(e) =>
-                          handleChangeFilters(
-                            "fuelType",
-                            type,
-                            e.target.checked
-                          )
-                        }
-                      />
-                      <label htmlFor={`fuel-${type}`}>
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold mb-2">Price Range</h2>
-                <div className="flex space-x-2">
-                  <div className="space-y-1">
-                    <label htmlFor="min-price">Min</label>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Colors</h2>
+              <div className="flex flex-col gap-2">
+                {colors.map((color, index) => (
+                  <div key={index} className="flex gap-2 items-center">
+                    <div
+                      className={`rounded-full w-8 h-8 cursor-pointer  ring-black ${
+                        filters.color === color.name
+                          ? "ring-red-600 ring-4"
+                          : "ring-1"
+                      }`}
+                      style={{backgroundColor: `${color.name}`}}
+                      title={color.name}
+                    ></div>
                     <input
-                      id="min-price"
-                      type="number"
-                      placeholder="Min Price"
-                      value={filters.priceMin ?? ""}
+                      type="checkbox"
+                      value={color.name}
+                      id={`${color.name}`}
                       onChange={(e) =>
                         handleChangeFilters(
-                          "priceMin",
-                          parseFloat(e.target.value)
+                          "color",
+                          color.name,
+                          e.target.checked
                         )
                       }
                     />
+                    <label htmlFor={`${color.name}`}>{color.name}</label>
                   </div>
-                  <div className="space-y-1">
-                    <label htmlFor="max-price">Max</label>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Brands</h2>
+              <div className="space-y-2">
+                {brands.map((brand, index) => (
+                  <div key={index} className="flex items-center space-x-2">
                     <input
-                      id="max-price"
-                      type="number"
-                      placeholder="Max Price"
-                      value={filters.priceMax ?? ""}
+                      type="checkbox"
+                      id={`brand-${index}`}
                       onChange={(e) =>
                         handleChangeFilters(
-                          "priceMax",
-                          parseFloat(e.target.value)
+                          "brand",
+                          brand.name,
+                          e.target.checked
                         )
                       }
                     />
+                    <label htmlFor={`brand-${index}`}>{brand.name}</label>
                   </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Drive Type</h2>
+              <div className="space-y-2">
+                {driveTypes.map((type, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`drive-${type}`}
+                      onChange={(e) =>
+                        handleChangeFilters("driveType", type, e.target.checked)
+                      }
+                    />
+                    <label htmlFor={`drive-${type}`}>
+                      {type.toUpperCase()}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Transmission Type</h2>
+              <div className="space-y-2">
+                {transmissionTypes.map((type, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`transmission-${type}`}
+                      onChange={(e) =>
+                        handleChangeFilters(
+                          "transmissionType",
+                          type,
+                          e.target.checked
+                        )
+                      }
+                    />
+                    <label htmlFor={`transmission-${type}`}>
+                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Fuel Type</h2>
+              <div className="space-y-2">
+                {fuelTypes.map((type, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`fuel-${type}`}
+                      onChange={(e) =>
+                        handleChangeFilters("fuelType", type, e.target.checked)
+                      }
+                    />
+                    <label htmlFor={`fuel-${type}`}>
+                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Price Range</h2>
+              <div className="flex flex-col gap-4 justify-center items-start ">
+                <div className="space-y-1">
+                  <Input
+                    id="min-price"
+                    type="number"
+                    placeholder="Min Price"
+                    value={filters.priceMin ?? ""}
+                    onChange={(e) =>
+                      handleChangeFilters(
+                        "priceMin",
+                        parseFloat(e.target.value)
+                      )
+                    }
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Input
+                    id="max-price"
+                    type="number"
+                    placeholder="Max Price"
+                    value={filters.priceMax ?? ""}
+                    onChange={(e) =>
+                      handleChangeFilters(
+                        "priceMax",
+                        parseFloat(e.target.value)
+                      )
+                    }
+                  />
                 </div>
               </div>
-              <div>
-                <h2 className="text-lg font-semibold mb-2">Kilometers Range</h2>
-                <div className="flex space-x-2">
-                  <div className="space-y-1">
-                    <label htmlFor="min-km">Min</label>
-                    <input
-                      id="min-km"
-                      type="number"
-                      placeholder="Min Km"
-                      value={filters.mileageMin ?? ""}
-                      onChange={(e) =>
-                        handleChangeFilters(
-                          "mileageMin",
-                          parseInt(e.target.value, 10)
-                        )
-                      }
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label htmlFor="max-km">Max</label>
-                    <input
-                      id="max-km"
-                      type="number"
-                      placeholder="Max Km"
-                      value={filters.mileageMax ?? ""}
-                      onChange={(e) =>
-                        handleChangeFilters(
-                          "mileageMax",
-                          parseInt(e.target.value, 10)
-                        )
-                      }
-                    />
-                  </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Kilometers Range</h2>
+              <div className="flex flex-col gap-4 justify-center items-start ">
+                <div className="space-y-1">
+                  <Input
+                    id="min-km"
+                    type="number"
+                    placeholder="Min Km"
+                    value={filters.mileageMin ?? ""}
+                    onChange={(e) =>
+                      handleChangeFilters(
+                        "mileageMin",
+                        parseInt(e.target.value, 10)
+                      )
+                    }
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Input
+                    id="max-km"
+                    type="number"
+                    placeholder="Max Km"
+                    value={filters.mileageMax ?? ""}
+                    onChange={(e) =>
+                      handleChangeFilters(
+                        "mileageMax",
+                        parseInt(e.target.value, 10)
+                      )
+                    }
+                  />
                 </div>
               </div>
             </div>
           </div>
-        </ScrollArea>
+        </div>
       </aside>
       <main className="flex-1 p-6">
         {data && data.getAllCarsInfo.length > 0 ? (

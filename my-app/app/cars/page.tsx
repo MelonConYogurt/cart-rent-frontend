@@ -2,19 +2,16 @@
 
 import {useState, useEffect} from "react";
 import {toast, Toaster} from "sonner";
+import {RotateCcw} from "lucide-react";
+import {Separator} from "@/components/ui/separator";
 import {Skeleton} from "@/components/ui/skeleton";
-import {Checkbox} from "@/components/ui/checkbox";
 import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
 import {Card, CardContent} from "@/components/ui/card";
-import {ScrollArea} from "@/components/ui/scroll-area";
 import {Data, FilterData, Filters} from "@/types/tsTypes";
 import {MultipleCarInfo} from "@/components/CardCarInfo";
 import GetAllCarsInfoFiltered from "@/utils/getAllCarsInfoFitered";
 import GetAllColors from "@/utils/getAllColors";
 import GetAllBrands from "@/utils/getAllInfoBrands";
-import {RotateCcw} from "lucide-react";
-import {Separator} from "@/components/ui/separator";
 
 export default function ListCars() {
   const [data, setData] = useState<Data>();
@@ -89,9 +86,7 @@ export default function ListCars() {
   }
 
   useEffect(() => {
-    console.log("Recibalo alla", filters);
     const filterStr = makeFilter(filters);
-    console.log("Guardelo ahi", filters);
     fetchDataFiltered(filterStr);
   }, [filters]);
 
@@ -140,7 +135,9 @@ export default function ListCars() {
     async function fetchData() {
       try {
         const filterStr = makeFilter(filters);
-        const response = await GetAllCarsInfoFiltered(filterStr);
+        const inicio = 0;
+        const final = 4;
+        const response = await GetAllCarsInfoFiltered(filterStr, inicio, final);
         if (response) {
           console.log(response);
           setData(response);

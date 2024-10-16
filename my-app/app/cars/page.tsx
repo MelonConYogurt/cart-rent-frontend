@@ -135,9 +135,7 @@ export default function ListCars() {
     async function fetchData() {
       try {
         const filterStr = makeFilter(filters);
-        const inicio = 0;
-        const final = 4;
-        const response = await GetAllCarsInfoFiltered(filterStr, inicio, final);
+        const response = await GetAllCarsInfoFiltered(filterStr);
         if (response) {
           console.log(response);
           setData(response);

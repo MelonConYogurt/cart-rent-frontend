@@ -103,7 +103,7 @@ export default function ListCars() {
   }
 
   useEffect(() => {
-    const sizeData = data?.getAllCarsInfo.length ?? 0;
+    const sizeData = data?.cars.length ?? 0;
     setPagination((prev) => ({
       ...prev,
       maxPage: Math.ceil(sizeData / prev.itemsPerPage),
@@ -365,9 +365,9 @@ export default function ListCars() {
         </div>
       </aside>
       <main className="flex-1 p-6">
-        {data && data.getAllCarsInfo.length > 0 ? (
+        {data && data.cars.length > 0 ? (
           <div className="flex flex-wrap gap-10">
-            <MultipleCarInfo data={data.getAllCarsInfo} />
+            <MultipleCarInfo data={data.cars} />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

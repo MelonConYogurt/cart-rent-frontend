@@ -1,9 +1,10 @@
 export interface Main {
   data: Data;
+  totalRows: number;
 }
 
 export interface Data {
-  getAllCarsInfo: Datum[];
+  cars: Datum[];
 }
 
 export interface Datum {

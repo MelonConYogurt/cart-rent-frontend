@@ -7,14 +7,14 @@ import {Separator} from "@/components/ui/separator";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Input} from "@/components/ui/input";
 import {Card, CardContent} from "@/components/ui/card";
-import {Data, FilterData, Filters} from "@/types/tsTypes";
+import {FilterData, Filters, Datum} from "@/types/tsTypes";
 import {MultipleCarInfo} from "@/components/CardCarInfo";
 import GetAllCarsInfoFiltered from "@/utils/getAllCarsInfoFitered";
 import GetAllColors from "@/utils/getAllColors";
 import GetAllBrands from "@/utils/getAllInfoBrands";
 
 export default function ListCars() {
-  const [data, setData] = useState<Data>();
+  const [data, setData] = useState<Datum[]>();
   const [colors, setColors] = useState<FilterData[]>([]);
   const [brands, setBrands] = useState<FilterData[]>([]);
   const [pagination, setPagination] = useState({
@@ -73,10 +73,10 @@ export default function ListCars() {
     try {
       console.log("Filter passed to fetch:", filters);
       setData(undefined);
-      const responseFilteredCars = await GetAllCarsInfoFiltered(filters);
-      if (responseFilteredCars.getAllCarsInfo.length > 0) {
-        setData(responseFilteredCars);
-        toast.success("Showing filtered cars");
+      const responseFilteredCars = await GetAllCarsInfoFiltered(filters, 10, 8);
+      if (responseFilteredCars.data.cars.length > 0) {
+        setData(responseFilteredCars.data.cars);
+        toast.success("Data was succesfully set");
       } else {
         toast.error("No cars found with those filters");
       }
@@ -103,7 +103,7 @@ export default function ListCars() {
   }
 
   useEffect(() => {
-    const sizeData = data?.cars.length ?? 0;
+    const sizeData = data?.length ?? 0;
     setPagination((prev) => ({
       ...prev,
       maxPage: Math.ceil(sizeData / prev.itemsPerPage),
@@ -135,10 +135,10 @@ export default function ListCars() {
     async function fetchData() {
       try {
         const filterStr = makeFilter(filters);
-        const response = await GetAllCarsInfoFiltered(filterStr);
+        const response = await GetAllCarsInfoFiltered(filterStr, 10, 8);
         if (response) {
-          console.log(response);
-          setData(response);
+          console.log("La data que se seteara sera: ", response.data.cars);
+          setData(response.data.cars);
           toast.success("Showing all available cars");
         } else {
           const error = await response.json();
@@ -365,9 +365,9 @@ export default function ListCars() {
         </div>
       </aside>
       <main className="flex-1 p-6">
-        {data && data.cars.length > 0 ? (
+        {data && data.length > 0 ? (
           <div className="flex flex-wrap gap-10">
-            <MultipleCarInfo data={data.cars} />
+            <MultipleCarInfo data={data} />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

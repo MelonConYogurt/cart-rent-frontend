@@ -6,7 +6,6 @@ async function GetAllCarsInfo() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Bearer `,
         },
       }
     );

@@ -8,29 +8,7 @@ import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
 import {Heart, Fuel, Gauge, Calendar, Car} from "lucide-react";
 import {Separator} from "./ui/separator";
-
-export interface Datum {
-  id: number;
-  brand: string;
-  model: string;
-  year: number;
-  vin: string;
-  color: string;
-  mileage: number;
-  numberOfDoors: number;
-  horsePower: number;
-  torque: number;
-  mediaUrl: string;
-  fuelType: string;
-  transmissionType: string;
-  driveType: string;
-  bodyType: string;
-  status?: boolean;
-  price: number;
-  available?: boolean;
-  rent_days?: number;
-  lastService?: string;
-}
+import {Datum} from "@/types/tsTypes";
 
 export function SingleCardInfo({info}: {info: Datum}) {
   const [isFavorite, setIsFavorite] = useState(false);

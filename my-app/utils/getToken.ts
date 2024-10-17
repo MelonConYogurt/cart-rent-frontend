@@ -17,7 +17,6 @@ async function GetToken() {
       const data = await response.json();
       const token = data.access_token;
       if (token) {
-        console.log(token);
         sessionStorage.setItem("token", token);
       }
       return data;

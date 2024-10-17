@@ -17,7 +17,6 @@ async function GetAllColors() {
       throw new Error(`Fail: ${response.status}`);
     } else {
       const data = await response.json();
-      console.log(data);
       return data;
     }
   } catch (error) {

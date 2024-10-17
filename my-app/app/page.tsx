@@ -4,23 +4,23 @@
 
 import {Button} from "@/components/ui/button";
 import {CarIcon, MapPinIcon, PhoneIcon, StarIcon} from "lucide-react";
-import {MultipleCarInfoLimited} from "@/components/LimitCardsInfo";
-import GetAllCarsInfo from "@/utils/getAllCarsInfo";
-import {Data} from "@/types/tsTypes";
+import {MultipleCarInfo} from "@/components/CardCarInfo";
+import GetAllCarsInfoFiltered from "@/utils/getAllCarsInfoFitered";
+import {Datum} from "@/types/tsTypes";
 import {useState, useEffect} from "react";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Card, CardContent} from "@/components/ui/card";
 
 export default function Home() {
-  const [data, setData] = useState<Data>();
+  const [data, setData] = useState<Datum[]>();
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await GetAllCarsInfo();
+        const response = await GetAllCarsInfoFiltered("", 3, 0);
         if (response) {
           console.log(response);
-          setData(response);
+          setData(response.data.cars);
         } else {
           const error = await response.json();
           console.log(error);
@@ -66,9 +66,9 @@ export default function Home() {
             Vehículos destacados
           </h2>
           <div className="flex flex-wrap">
-            {data && data.getAllCarsInfo.length > 0 ? (
+            {data && data.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <MultipleCarInfoLimited data={data.getAllCarsInfo} />
+                <MultipleCarInfo data={data} />
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

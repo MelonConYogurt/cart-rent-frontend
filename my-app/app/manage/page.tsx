@@ -1,23 +1,23 @@
 "use client";
 
-import GetAllCarsInfo from "@/utils/getAllCarsInfo";
+import GetAllCarsInfoFiltered from "@/utils/getAllCarsInfoFitered";
 import {useState, useEffect} from "react";
-import {Data} from "@/types/tsTypes";
+import {Datum} from "@/types/tsTypes";
 import {AdminCarList} from "@/components/AdminCardInfo";
 import {toast, Toaster} from "sonner";
 import {Skeleton} from "@/components/ui/skeleton";
 
 function Manage() {
-  const [data, setData] = useState<Data>();
+  const [data, setData] = useState<Datum[]>();
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await GetAllCarsInfo();
+        const response = await GetAllCarsInfoFiltered("", 100, 0);
         console.log(response);
         if (response) {
           console.log(response);
-          setData(response);
+          setData(response.data.cars);
           toast.success("Showing all cars available");
         } else {
           const error = await response.json();
@@ -34,9 +34,9 @@ function Manage() {
   return (
     <main className="m-5 flex felx-row">
       <Toaster richColors />
-      {data && data.getAllCarsInfo.length > 0 ? (
+      {data && data.length > 0 ? (
         <section className="m-5 flex flex-wrap gap-5 mx-5 my-10">
-          <AdminCarList data={data.getAllCarsInfo} />
+          <AdminCarList data={data} />
         </section>
       ) : (
         <section className="h-screen m-5 flex flex-wrap gap-5 mx-5 my-10">

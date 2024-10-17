@@ -87,13 +87,13 @@ async function GetAllCarsInfoFiltered(
     }
 
     const {data} = await response.json();
-    // console.log("Esta fue la query que se mandó:", query);
-    // console.log(
-    //   "Datos obtenidos de la API:",
-    //   data.data.cars,
-    //   "Numero de registros recuperados: ",
-    //   data.data.totalRows
-    // );
+    console.log("Esta fue la query que se mandó:", query);
+    console.log(
+      "Datos obtenidos de la API:",
+      data.data.cars,
+      "Numero de registros recuperados: ",
+      data.data.totalRows
+    );
     return data;
   } catch (error) {
     console.log("Error:", error);

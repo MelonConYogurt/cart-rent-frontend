@@ -20,7 +20,8 @@ export default function ListCars() {
   const [pagination, setPagination] = useState({
     maxPage: 0,
     actualPage: 0,
-    itemsPerPage: 3,
+    itemsPerPage: 2,
+    totalItems: 0,
   });
   const driveTypes = ["rwd", "fwd", "awd"];
   const transmissionTypes = ["manual", "automatic", "cvt"];
@@ -73,7 +74,7 @@ export default function ListCars() {
     try {
       console.log("Filter passed to fetch:", filters);
       setData(undefined);
-      const responseFilteredCars = await GetAllCarsInfoFiltered(filters, 10, 8);
+      const responseFilteredCars = await GetAllCarsInfoFiltered(filters);
       if (responseFilteredCars.data.cars.length > 0) {
         setData(responseFilteredCars.data.cars);
         toast.success("Data was succesfully set");
@@ -103,12 +104,11 @@ export default function ListCars() {
   }
 
   useEffect(() => {
-    const sizeData = data?.length ?? 0;
     setPagination((prev) => ({
       ...prev,
-      maxPage: Math.ceil(sizeData / prev.itemsPerPage),
+      maxPage: pagination.totalItems,
     }));
-  }, [data]);
+  }, [data, pagination.totalItems]);
 
   function resetFilters() {
     const reset = Object.fromEntries(
@@ -118,27 +118,41 @@ export default function ListCars() {
   }
 
   function incrementPagination() {
-    setPagination((prev) => ({
-      ...prev,
-      actualPage: prev.actualPage + 1,
-    }));
+    setPagination((prev) => {
+      const nextPage = prev.actualPage + 1;
+      if (nextPage < prev.maxPage) {
+        return {...prev, actualPage: nextPage};
+      }
+      return prev;
+    });
   }
 
   function decrementPagination() {
-    setPagination((prev) => ({
-      ...prev,
-      actualPage: prev.actualPage - 1,
-    }));
+    setPagination((prev) => {
+      const prevPage = prev.actualPage - 1;
+      if (prevPage >= 0) {
+        return {...prev, actualPage: prevPage};
+      }
+      return prev;
+    });
   }
 
   useEffect(() => {
     async function fetchData() {
       try {
         const filterStr = makeFilter(filters);
-        const response = await GetAllCarsInfoFiltered(filterStr, 10, 8);
+        const response = await GetAllCarsInfoFiltered(
+          filterStr,
+          pagination.itemsPerPage,
+          pagination.actualPage
+        );
         if (response) {
           console.log("La data que se seteara sera: ", response.data.cars);
           setData(response.data.cars);
+          setPagination((prev) => ({
+            ...prev,
+            totalItems: response.data.totalRows,
+          }));
           toast.success("Showing all available cars");
         } else {
           const error = await response.json();
@@ -150,7 +164,7 @@ export default function ListCars() {
       }
     }
     fetchData();
-  }, [filters]);
+  }, [filters, pagination.actualPage, pagination.itemsPerPage]);
 
   useEffect(() => {
     async function fetchFilterData() {
@@ -389,7 +403,7 @@ export default function ListCars() {
         <div className="flex justify-center items-center my-20 gap-5">
           <button
             disabled={pagination.actualPage <= 0}
-            onClick={() => decrementPagination()}
+            onClick={decrementPagination}
             className={`flex items-center justify-center px-4 h-10 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
               pagination.actualPage <= 0 ? "cursor-not-allowed" : ""
             }`}
@@ -397,13 +411,13 @@ export default function ListCars() {
             Previous
           </button>
           <span className="text-base font-medium text-gray-500">
-            {pagination.actualPage}/{pagination.maxPage}
+            {pagination.actualPage + 1}/{pagination.maxPage}
           </span>
           <button
-            onClick={() => incrementPagination()}
-            disabled={pagination.actualPage >= pagination.maxPage}
+            onClick={incrementPagination}
+            disabled={pagination.actualPage >= pagination.maxPage - 1}
             className={`flex items-center justify-center px-4 h-10 ms-3 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
-              pagination.actualPage >= pagination.maxPage
+              pagination.actualPage >= pagination.maxPage - 1
                 ? "cursor-not-allowed"
                 : ""
             }`}

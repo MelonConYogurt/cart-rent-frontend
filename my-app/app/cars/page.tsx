@@ -106,7 +106,7 @@ export default function ListCars() {
   useEffect(() => {
     setPagination((prev) => ({
       ...prev,
-      maxPage: pagination.totalItems,
+      maxPage: Math.ceil(pagination.totalItems / prev.itemsPerPage),
     }));
   }, [data, pagination.totalItems]);
 

@@ -1,30 +1,76 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import {useState} from "react";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Button} from "@/components/ui/button";
+import {Toaster, toast} from "sonner";
+import Link from "next/link";
 import {
+  Calendar,
+  Car,
+  DollarSign,
+  DoorOpen,
   Fuel,
   Gauge,
   Power,
   Repeat,
-  DoorOpen,
-  Calendar,
   Wrench,
-  DollarSign,
-  Car,
 } from "lucide-react";
-
+import CarChangeAvailable from "@/utils/publishCar";
+import CarChangeState from "@/utils/changeState";
+import DeleteCarDb from "@/utils/deleteCar";
 import {Datum} from "@/types/tsTypes";
-import {Button} from "./ui/button";
-import Link from "next/link";
 
-export function AdminCarCard({info}: {info: Datum}) {
-  function DeletePost(post: Datum) {
-    console.log("Delete post:", post);
+export function AdminCarCard({info: initialInfo}: {info: Datum}) {
+  const [info, setInfo] = useState(initialInfo);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  async function handleAvailabilityChange() {
+    try {
+      const newAvailability = !info.available;
+      const data = await CarChangeAvailable(info.id, newAvailability);
+      console.log(data);
+      setInfo({...info, available: newAvailability});
+      toast.success(
+        newAvailability
+          ? "Car has been made available"
+          : "Car has been made unavailable"
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to change availability");
+    }
   }
 
-  function PublishPost(post: Datum) {
-    console.log("Post published:", post);
+  async function handleStateChange() {
+    try {
+      const newStatus = !info.status;
+      const data = await CarChangeState(info.id, newStatus);
+      console.log(data);
+      setInfo({...info, status: newStatus});
+      toast.success(
+        newStatus ? "Car has been published" : "Car has been unpublished"
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to change state");
+    }
+  }
+
+  async function handleDelete() {
+    if (window.confirm("Are you sure you want to delete this car?")) {
+      setIsDeleting(true);
+      try {
+        await DeleteCarDb(info.id);
+        toast.success("Car has been deleted");
+        // You might want to remove the car from the list or redirect here
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to delete car");
+        setIsDeleting(false);
+      }
+    }
   }
 
   return (
@@ -35,127 +81,150 @@ export function AdminCarCard({info}: {info: Datum}) {
             {info.brand} {info.model}
           </span>
         </CardTitle>
-        {info.available === true ? (
-          <div className="bg-blue-300 rounded-sm p-2">Available</div>
-        ) : (
-          <div className="bg-red-300 rounded-sm p-2">Unavailable</div>
-        )}
-        {info.status === true ? (
-          <div className="bg-blue-300 rounded-sm p-2">Published</div>
-        ) : (
-          <div className="bg-purple-300 rounded-sm p-2">Draft</div>
-        )}
+        <div className="flex space-x-2">
+          <StatusBadge
+            label="Available"
+            isActive={info.available ?? false}
+            activeColor="bg-blue-300"
+            inactiveColor="bg-red-300"
+          />
+          <StatusBadge
+            label="Published"
+            isActive={info.status ?? false}
+            activeColor="bg-blue-300"
+            inactiveColor="bg-purple-300"
+          />
+        </div>
       </CardHeader>
-      <CardContent className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <InfoItem
-          icon={<Calendar className="w-5 h-5" />}
-          label="Year"
-          value={info.year.toString()}
-        />
-        <InfoItem
-          icon={<Car className="w-5 h-5" />}
-          label="VIN"
-          value={info.vin}
-        />
-        <InfoItem
-          icon={
-            <div
-              className="w-5 h-5 rounded-full"
-              style={{backgroundColor: info.color}}
-            />
-          }
-          label="Color"
-          value={info.color}
-        />
-        <InfoItem
-          icon={<Gauge className="w-5 h-5" />}
-          label="Mileage"
-          value={`${info.mileage.toLocaleString()} miles`}
-        />
-        <InfoItem
-          icon={<DoorOpen className="w-5 h-5" />}
-          label="Doors"
-          value={info.numberOfDoors.toString()}
-        />
-        <InfoItem
-          icon={<Power className="w-5 h-5" />}
-          label="Horsepower"
-          value={`${info.horsePower} HP`}
-        />
-        <InfoItem
-          icon={<Repeat className="w-5 h-5" />}
-          label="Torque"
-          value={`${info.torque} Nm`}
-        />
-        <InfoItem
-          icon={<Fuel className="w-5 h-5" />}
-          label="Fuel Type"
-          value={info.fuelType}
-        />
-        <InfoItem
-          icon={<Repeat className="w-5 h-5" />}
-          label="Transmission"
-          value={info.transmissionType}
-        />
-        <InfoItem
-          icon={<Car className="w-5 h-5" />}
-          label="Drive Type"
-          value={info.driveType}
-        />
-        <InfoItem
-          icon={<Car className="w-5 h-5" />}
-          label="Body Type"
-          value={info.bodyType}
-        />
-        <InfoItem
-          icon={<DollarSign className="w-5 h-5" />}
-          label="Price"
-          value={`$${info.price.toLocaleString()}`}
-        />
-        {info.rent_days !== undefined && (
+      <CardContent className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <InfoItem
             icon={<Calendar className="w-5 h-5" />}
-            label="Rent Days"
-            value={info.rent_days.toString()}
+            label="Year"
+            value={info.year.toString()}
           />
-        )}
-        {info.lastService && (
           <InfoItem
-            icon={<Wrench className="w-5 h-5" />}
-            label="Last Service"
-            value={info.lastService}
+            icon={<Car className="w-5 h-5" />}
+            label="VIN"
+            value={info.vin}
           />
-        )}
-      </CardContent>
-      <div className="px-6 pb-6">
-        <img
-          src={info.mediaUrl}
-          alt={`${info.brand} ${info.model}`}
-          className="w-full h-full object-cover rounded-lg"
-        />
-      </div>
-      <div className="flex justify-end mx-6 gap-2 my-5">
-        <Link legacyBehavior href={`/manage/${info.id}`}>
-          <Button variant={"outline"} className="">
-            Edit
+          <InfoItem
+            icon={
+              <div
+                className="w-5 h-5 rounded-full"
+                style={{backgroundColor: info.color}}
+              />
+            }
+            label="Color"
+            value={info.color}
+          />
+          <InfoItem
+            icon={<Gauge className="w-5 h-5" />}
+            label="Mileage"
+            value={`${info.mileage.toLocaleString()} miles`}
+          />
+          <InfoItem
+            icon={<DoorOpen className="w-5 h-5" />}
+            label="Doors"
+            value={info.numberOfDoors.toString()}
+          />
+          <InfoItem
+            icon={<Power className="w-5 h-5" />}
+            label="Horsepower"
+            value={`${info.horsePower} HP`}
+          />
+          <InfoItem
+            icon={<Repeat className="w-5 h-5" />}
+            label="Torque"
+            value={`${info.torque} Nm`}
+          />
+          <InfoItem
+            icon={<Fuel className="w-5 h-5" />}
+            label="Fuel Type"
+            value={info.fuelType}
+          />
+          <InfoItem
+            icon={<Repeat className="w-5 h-5" />}
+            label="Transmission"
+            value={info.transmissionType}
+          />
+          <InfoItem
+            icon={<Car className="w-5 h-5" />}
+            label="Drive Type"
+            value={info.driveType}
+          />
+          <InfoItem
+            icon={<Car className="w-5 h-5" />}
+            label="Body Type"
+            value={info.bodyType}
+          />
+          <InfoItem
+            icon={<DollarSign className="w-5 h-5" />}
+            label="Price"
+            value={`$${info.price.toLocaleString()}`}
+          />
+          {info.rent_days !== undefined && (
+            <InfoItem
+              icon={<Calendar className="w-5 h-5" />}
+              label="Rent Days"
+              value={info.rent_days.toString()}
+            />
+          )}
+          {info.lastService && (
+            <InfoItem
+              icon={<Wrench className="w-5 h-5" />}
+              label="Last Service"
+              value={info.lastService}
+            />
+          )}
+        </div>
+        <div className="mt-6">
+          <img
+            src={info.mediaUrl}
+            alt={`${info.brand} ${info.model}`}
+            className="w-full h-64 object-cover rounded-lg"
+          />
+        </div>
+        <div className="flex justify-end mt-6 space-x-2">
+          <Link href={`/manage/${info.id}`} passHref>
+            <Button variant="outline">Edit</Button>
+          </Link>
+          <Button variant="outline" onClick={handleAvailabilityChange}>
+            {info.available ? "Make Unavailable" : "Make Available"}
           </Button>
-        </Link>
-        <Button
-          variant={"outline"}
-          className=""
-          onClick={() => PublishPost(info)}
-        >
-          Publish
-        </Button>
-      </div>
-      <Button
-        className="absolute top-2 right-2 m-2 hover:bg-red-400 border-gray-600 transition-colors"
-        variant={"outline"}
-        onClick={() => DeletePost(info)}
-      >
-        Delete
-      </Button>
+          <Button variant="outline" onClick={handleStateChange}>
+            {info.status ? "Unpublish" : "Publish"}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="hover:bg-red-400 border-gray-600 transition-colors"
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
+        </div>
+      </CardContent>
+      <Toaster richColors closeButton position="top-center" />
     </Card>
+  );
+}
+
+function StatusBadge({
+  label,
+  isActive,
+  activeColor,
+  inactiveColor,
+}: {
+  label: string;
+  isActive: boolean;
+  activeColor: string;
+  inactiveColor: string;
+}) {
+  return (
+    <div className={`${isActive ? activeColor : inactiveColor} rounded-sm p-2`}>
+      {isActive ? label : `Not ${label}`}
+    </div>
   );
 }
 
@@ -181,10 +250,10 @@ function InfoItem({
 
 export function AdminCarList({data}: {data: Datum[]}) {
   return (
-    <>
+    <div className="space-y-6">
       {data.map((car) => (
-        <AdminCarCard key={car.vin} info={car} />
+        <AdminCarCard key={car.id} info={car} />
       ))}
-    </>
+    </div>
   );
 }

@@ -1,64 +1,64 @@
 "use client";
 
-import GetAllCarsInfoFiltered from "@/utils/getAllCarsInfoFitered";
 import {useState, useEffect} from "react";
 import {Datum} from "@/types/tsTypes";
 import {AdminCarList} from "@/components/AdminCardInfo";
 import {toast, Toaster} from "sonner";
 import {Skeleton} from "@/components/ui/skeleton";
+import GetAllCarsInfoFiltered from "@/utils/getAllCarsInfoFitered";
 
-function Manage() {
-  const [data, setData] = useState<Datum[]>();
+export default function Manage() {
+  const [cars, setCars] = useState<Datum[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await GetAllCarsInfoFiltered("", 100, 0);
-        console.log(response);
-        if (response) {
-          console.log(response);
-          setData(response.data.cars);
-          toast.success("Showing all cars available");
-        } else {
-          const error = await response.json();
-          const result = error.data;
-          toast.error(`Error: ${result}`);
-        }
-      } catch (error) {
-        toast.error(`Error: ${error}`);
-      }
-    }
-    fetchData();
+    fetchCars();
   }, []);
 
+  const fetchCars = async () => {
+    try {
+      setIsLoading(true);
+      const response = await GetAllCarsInfoFiltered("", 100, 0);
+      if (response && response.data && response.data.cars) {
+        setCars(response.data.cars);
+        toast.success("Showing all available cars");
+      } else {
+        throw new Error("Invalid response format");
+      }
+    } catch (error) {
+      toast.error(
+        `Error fetching cars: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <main className="m-5 flex felx-row">
+    <main className="m-5 flex flex-col">
       <Toaster richColors />
-      {data && data.length > 0 ? (
-        <section className="m-5 flex flex-wrap gap-5 mx-5 my-10">
-          <AdminCarList data={data} />
-        </section>
-      ) : (
-        <section className="h-screen m-5 flex flex-wrap gap-5 mx-5 my-10">
-          {[...Array(6)].map((_, index) => (
-            <div key={index} className="space-y-3">
-              <Skeleton className="h-[620px] w-[450px] rounded-xl animate-pulse" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
-              </div>
-            </div>
-          ))}
-        </section>
-      )}
+      <section className="m-5 flex flex-wrap gap-5 mx-5 my-10">
+        {isLoading ? <SkeletonLoading /> : <AdminCarList data={cars} />}
+      </section>
     </main>
   );
 }
 
-export default Manage;
+function SkeletonLoading() {
+  return (
+    <>
+      {[...Array(6)].map((_, index) => (
+        <div key={index} className="space-y-3">
+          <Skeleton className="h-[620px] w-[450px] rounded-xl" />
+          <div className="space-y-2">
+            {[...Array(8)].map((_, i) => (
+              <Skeleton key={i} className="h-4 w-[250px]" />
+            ))}
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}

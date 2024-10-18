@@ -250,7 +250,7 @@ function InfoItem({
 
 export function AdminCarList({data}: {data: Datum[]}) {
   return (
-    <div className="space-y-6">
+    <div className="m-5 flex flex-wrap gap-5 mx-5 my-10">
       {data.map((car) => (
         <AdminCarCard key={car.id} info={car} />
       ))}

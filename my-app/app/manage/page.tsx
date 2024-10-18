@@ -39,7 +39,7 @@ export default function Manage() {
   return (
     <main className="m-5 flex flex-col">
       <Toaster richColors />
-      <section className="m-5 flex flex-wrap gap-5 mx-5 my-10">
+      <section>
         {isLoading ? <SkeletonLoading /> : <AdminCarList data={cars} />}
       </section>
     </main>

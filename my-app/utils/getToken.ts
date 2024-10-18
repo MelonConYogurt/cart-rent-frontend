@@ -1,7 +1,7 @@
 async function GetToken() {
   try {
     const bodyContent = new FormData();
-    bodyContent.append("username", "new_user");
+    bodyContent.append("username", "admin");
     bodyContent.append("password", "securepassword");
     const response = await fetch("http://127.0.0.1:8000/token", {
       method: "POST",
@@ -18,6 +18,7 @@ async function GetToken() {
       const token = data.access_token;
       if (token) {
         sessionStorage.setItem("token", token);
+        console.log(token);
       }
       return data;
     }

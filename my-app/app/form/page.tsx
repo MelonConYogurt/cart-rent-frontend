@@ -49,7 +49,6 @@ export default function ImprovedCarForm() {
       toast.warning("Por favor, sube una imagen");
       return;
     }
-
     try {
       const updatedData = {...data, mediaUrl: imageUrl};
       const fetchData = await SendCarData(updatedData);
